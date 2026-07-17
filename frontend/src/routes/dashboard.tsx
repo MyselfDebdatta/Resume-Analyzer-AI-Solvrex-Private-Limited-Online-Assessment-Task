@@ -50,9 +50,21 @@ function DashboardPage() {
   const { data: sessionData, isPending } = authClient.useSession();
   const [phase, setPhase] = useState<Phase>("form");
   const [file, setFile] = useState<File | null>(null);
-  const [jd, setJd] = useState("");
-  const [role, setRole] = useState("");
-  const [github, setGithub] = useState("");
+  const [jd, setJd] = useState(() => typeof window !== 'undefined' ? sessionStorage.getItem("analyzer_jd") || "" : "");
+  const [role, setRole] = useState(() => typeof window !== 'undefined' ? sessionStorage.getItem("analyzer_role") || "" : "");
+  const [github, setGithub] = useState(() => typeof window !== 'undefined' ? sessionStorage.getItem("analyzer_github") || "" : "");
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') sessionStorage.setItem("analyzer_jd", jd);
+  }, [jd]);
+  
+  useEffect(() => {
+    if (typeof window !== 'undefined') sessionStorage.setItem("analyzer_role", role);
+  }, [role]);
+  
+  useEffect(() => {
+    if (typeof window !== 'undefined') sessionStorage.setItem("analyzer_github", github);
+  }, [github]);
 
   useEffect(() => {
     if (!isPending && !sessionData) {
