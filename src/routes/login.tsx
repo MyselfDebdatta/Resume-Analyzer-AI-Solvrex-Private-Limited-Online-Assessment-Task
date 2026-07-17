@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
-import { Rocket, Mail, Lock, Github, Chrome } from "lucide-react";
+import { Rocket, Mail, Lock, Github, Chrome, ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import { authClient } from "../lib/auth-client";
 
@@ -144,7 +144,12 @@ export function AuthShell({ mode }: { mode: "login" | "signup" }) {
         </div>
       </div>
 
-      <div className="flex items-center justify-center p-6 md:p-10">
+      <div className="flex flex-col items-center justify-center p-6 md:p-10">
+        <div className="w-full max-w-md mb-6 flex justify-start">
+          <Link to="/" className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+            <ArrowLeft className="h-4 w-4" /> Back to Home
+          </Link>
+        </div>
         <div className="w-full max-w-md">
           <div className="glass-strong rounded-3xl p-8 shadow-glow">
             {!needsOtp ? (
