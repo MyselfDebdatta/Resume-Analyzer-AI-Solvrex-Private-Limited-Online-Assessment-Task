@@ -53,7 +53,15 @@ function DashboardPage() {
   const router = useRouter();
   const stats = Route.useLoaderData();
   const { data: sessionData, isPending } = authClient.useSession();
-  const [phase, setPhase] = useState<Phase>(() => typeof window !== 'undefined' ? (sessionStorage.getItem("analyzer_phase") as Phase) || "form" : "form");
+  const [phase, setPhase] = useState<Phase>(() => {
+    if (typeof window !== 'undefined') {
+      const p = sessionStorage.getItem("analyzer_phase");
+      if (p === "result" || p === '"result"') return "result";
+      if (p === "loading" || p === '"loading"') return "loading";
+      return "form";
+    }
+    return "form";
+  });
   const [file, setFile] = useState<File | null>(null);
   const [jd, setJd] = useState(() => typeof window !== 'undefined' ? sessionStorage.getItem("analyzer_jd") || "" : "");
   const [role, setRole] = useState(() => typeof window !== 'undefined' ? sessionStorage.getItem("analyzer_role") || "" : "");
@@ -97,6 +105,12 @@ function DashboardPage() {
       router.navigate({ to: "/login" });
     }
   }, [isPending, sessionData, router]);
+
+  useEffect(() => {
+    if (phase === "result" && !scorecard) {
+      setPhase("form");
+    }
+  }, [phase, scorecard]);
 
 
 
