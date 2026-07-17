@@ -48,11 +48,32 @@ function DashboardPage() {
   const router = useRouter();
   const stats = Route.useLoaderData();
   const { data: sessionData, isPending } = authClient.useSession();
-  const [phase, setPhase] = useState<Phase>("form");
+  const [phase, setPhase] = useState<Phase>(() => typeof window !== 'undefined' ? (sessionStorage.getItem("analyzer_phase") as Phase) || "form" : "form");
   const [file, setFile] = useState<File | null>(null);
   const [jd, setJd] = useState(() => typeof window !== 'undefined' ? sessionStorage.getItem("analyzer_jd") || "" : "");
   const [role, setRole] = useState(() => typeof window !== 'undefined' ? sessionStorage.getItem("analyzer_role") || "" : "");
   const [github, setGithub] = useState(() => typeof window !== 'undefined' ? sessionStorage.getItem("analyzer_github") || "" : "");
+  const [scorecard, setScorecard] = useState<any>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = sessionStorage.getItem("analyzer_scorecard");
+      return saved ? JSON.parse(saved) : null;
+    }
+    return null;
+  });
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') sessionStorage.setItem("analyzer_phase", phase);
+  }, [phase]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if (scorecard) {
+        sessionStorage.setItem("analyzer_scorecard", JSON.stringify(scorecard));
+      } else {
+        sessionStorage.removeItem("analyzer_scorecard");
+      }
+    }
+  }, [scorecard]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') sessionStorage.setItem("analyzer_jd", jd);
@@ -72,7 +93,7 @@ function DashboardPage() {
     }
   }, [isPending, sessionData, router]);
 
-  const [scorecard, setScorecard] = useState<any>(null);
+
 
   const runAnalysis = async () => {
     if (!file || !jd || !role) return;
