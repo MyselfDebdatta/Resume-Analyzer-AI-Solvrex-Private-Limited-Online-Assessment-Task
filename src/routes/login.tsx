@@ -245,6 +245,9 @@ export function AuthShell({ mode }: { mode: "login" | "signup" }) {
                 <p className="mt-1 text-sm text-muted-foreground">
                   We sent a 6-digit verification code to <strong>{email}</strong>.
                 </p>
+                <p className="mt-2 text-sm text-amber-600 dark:text-amber-500 font-medium">
+                  Please also check your <strong>spam or junk folder</strong> if you don't see it in your inbox!
+                </p>
 
                 {error && (
                   <div className="mt-4 rounded-xl bg-destructive/10 p-3 text-sm text-destructive">
