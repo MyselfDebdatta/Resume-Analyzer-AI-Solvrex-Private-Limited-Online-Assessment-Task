@@ -1,8 +1,8 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { Clock, Search, ChevronRight, Sparkles, Rocket, ArrowLeft, Home, LogOut, Calendar, Activity, FileCheck } from "lucide-react";
+import { Clock, Search, ChevronRight, Sparkles, Rocket, ArrowLeft, Home, LogOut, Calendar, Activity, FileCheck, Trash2, AlertTriangle } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
-import { getUserStatsFn, getHistoryFn } from "@/lib/server-fns";
+import { getUserStatsFn, getHistoryFn, deleteAnalysisFn, clearHistoryFn } from "@/lib/server-fns";
 
 export const Route = createFileRoute("/history")({
   head: () => ({
@@ -28,7 +28,12 @@ function HistoryPage() {
   const router = useRouter();
   const { stats, history } = Route.useLoaderData();
   const { data: sessionData, isPending } = authClient.useSession();
+  
   const [q, setQ] = useState("");
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+  const [clearAllConfirm, setClearAllConfirm] = useState(false);
+  const [confirmText, setConfirmText] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     if (!isPending && !sessionData) {
@@ -165,12 +170,23 @@ function HistoryPage() {
                   Revisit any past analysis. Track your score over time.
                 </p>
               </div>
-              <Link
-                to="/dashboard"
-                className="inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-glow transition-transform hover:scale-[1.03]"
-              >
-                <Sparkles className="h-4 w-4" /> New analysis
-              </Link>
+              
+              <div className="flex items-center gap-3">
+                {history.length > 0 && (
+                  <button
+                    onClick={() => setClearAllConfirm(true)}
+                    className="inline-flex items-center gap-2 rounded-full border border-destructive/20 bg-destructive/5 px-5 py-2.5 text-sm font-semibold text-destructive hover:bg-destructive hover:text-destructive-foreground transition-all"
+                  >
+                    <Trash2 className="h-4 w-4" /> Clear History
+                  </button>
+                )}
+                <Link
+                  to="/dashboard"
+                  className="inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-glow transition-transform hover:scale-[1.03]"
+                >
+                  <Sparkles className="h-4 w-4" /> New analysis
+                </Link>
+              </div>
             </div>
 
             <div className="mt-8 flex items-center rounded-2xl border border-border bg-card px-3 shadow-card">
@@ -205,7 +221,14 @@ function HistoryPage() {
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setDeleteConfirmId(it.id)}
+                      className="inline-flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
+                      title="Delete analysis"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
                     <Link
                       to="/dashboard"
                       className="inline-flex flex-shrink-0 items-center gap-1 rounded-full border border-border px-4 py-2 text-xs font-semibold hover:bg-secondary transition-colors"
@@ -224,6 +247,103 @@ function HistoryPage() {
           </div>
         </div>
       </main>
+
+      {/* Single Item Delete Modal */}
+      {deleteConfirmId && (
+        <div className="fixed inset-0 z-[100] grid place-items-center bg-background/80 backdrop-blur-sm p-4">
+          <div className="w-full max-w-md rounded-3xl border border-border/60 bg-card p-6 shadow-glow">
+            <div className="flex items-center gap-3 text-destructive">
+              <div className="grid h-10 w-10 place-items-center rounded-full bg-destructive/10">
+                <AlertTriangle className="h-5 w-5" />
+              </div>
+              <h3 className="text-lg font-bold text-foreground">Delete Analysis</h3>
+            </div>
+            <p className="mt-4 text-sm text-muted-foreground">
+              Are you sure you want to delete this analysis? This action cannot be undone.
+            </p>
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                disabled={isDeleting}
+                onClick={() => setDeleteConfirmId(null)}
+                className="rounded-full border border-border px-4 py-2 text-sm font-semibold hover:bg-secondary"
+              >
+                Cancel
+              </button>
+              <button
+                disabled={isDeleting}
+                onClick={async () => {
+                  setIsDeleting(true);
+                  await deleteAnalysisFn({ data: deleteConfirmId });
+                  await router.invalidate();
+                  setIsDeleting(false);
+                  setDeleteConfirmId(null);
+                }}
+                className="rounded-full bg-destructive px-4 py-2 text-sm font-semibold text-destructive-foreground shadow-glow disabled:opacity-50"
+              >
+                {isDeleting ? "Deleting..." : "Yes, Delete"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Clear All Modal (GitHub Style) */}
+      {clearAllConfirm && (
+        <div className="fixed inset-0 z-[100] grid place-items-center bg-background/80 backdrop-blur-sm p-4">
+          <div className="w-full max-w-md rounded-3xl border border-border/60 bg-card p-6 shadow-glow">
+            <div className="flex items-center gap-3 text-destructive">
+              <div className="grid h-10 w-10 place-items-center rounded-full bg-destructive/10">
+                <AlertTriangle className="h-5 w-5" />
+              </div>
+              <h3 className="text-lg font-bold text-foreground">Clear All History</h3>
+            </div>
+            <div className="mt-4 space-y-4 text-sm text-muted-foreground">
+              <p>
+                This will permanently delete <strong>all</strong> of your past analyses. This action cannot be undone.
+              </p>
+              <div>
+                <label className="block text-xs font-semibold text-foreground mb-1">
+                  Please type <strong>delete</strong> to confirm.
+                </label>
+                <input
+                  type="text"
+                  value={confirmText}
+                  onChange={(e) => setConfirmText(e.target.value)}
+                  className="w-full rounded-xl border border-border bg-background px-3 py-2 outline-none focus:border-destructive"
+                  placeholder="delete"
+                />
+              </div>
+            </div>
+            <div className="mt-6 flex justify-end gap-3">
+              <button
+                disabled={isDeleting}
+                onClick={() => {
+                  setClearAllConfirm(false);
+                  setConfirmText("");
+                }}
+                className="rounded-full border border-border px-4 py-2 text-sm font-semibold hover:bg-secondary"
+              >
+                Cancel
+              </button>
+              <button
+                disabled={confirmText !== "delete" || isDeleting}
+                onClick={async () => {
+                  setIsDeleting(true);
+                  await clearHistoryFn();
+                  await router.invalidate();
+                  setIsDeleting(false);
+                  setClearAllConfirm(false);
+                  setConfirmText("");
+                }}
+                className="rounded-full bg-destructive px-4 py-2 text-sm font-semibold text-destructive-foreground shadow-glow disabled:opacity-50"
+              >
+                {isDeleting ? "Clearing..." : "I understand, clear history"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

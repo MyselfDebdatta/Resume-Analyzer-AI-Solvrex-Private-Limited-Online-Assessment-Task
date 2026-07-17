@@ -69,3 +69,39 @@ export const getHistoryFn = createServerFn({ method: "GET" })
 
     return analyses;
   });
+
+export const deleteAnalysisFn = createServerFn({ method: "POST" })
+  .validator((id: string) => id)
+  .handler(async ({ data: id }) => {
+    const request = getRequest();
+    const sessionData = await auth.api.getSession({ headers: request.headers });
+
+    if (!sessionData?.user) {
+      throw new Error("Unauthorized");
+    }
+
+    await prisma.analysis.deleteMany({
+      where: { 
+        id: id,
+        userId: sessionData.user.id 
+      },
+    });
+
+    return { success: true };
+  });
+
+export const clearHistoryFn = createServerFn({ method: "POST" })
+  .handler(async () => {
+    const request = getRequest();
+    const sessionData = await auth.api.getSession({ headers: request.headers });
+
+    if (!sessionData?.user) {
+      throw new Error("Unauthorized");
+    }
+
+    await prisma.analysis.deleteMany({
+      where: { userId: sessionData.user.id },
+    });
+
+    return { success: true };
+  });
