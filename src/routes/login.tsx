@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
-import { Rocket, Mail, Lock, Github, Chrome, ArrowLeft } from "lucide-react";
+import { Rocket, Mail, Lock, Github, Chrome, ArrowLeft, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 import { authClient } from "../lib/auth-client";
 
@@ -32,6 +32,7 @@ export function AuthShell({ mode }: { mode: "login" | "signup" }) {
 
   const [needsOtp, setNeedsOtp] = useState(false);
   const [otp, setOtp] = useState("");
+  const [verified, setVerified] = useState(false);
 
   const isFormValid = isLogin 
     ? email.length > 0 && password.length > 0 
@@ -95,7 +96,7 @@ export function AuthShell({ mode }: { mode: "login" | "signup" }) {
         otp,
       });
       if (verifyError) throw new Error(verifyError.message || "Invalid OTP code.");
-      router.navigate({ to: "/dashboard" });
+      setVerified(true);
     } catch (err: any) {
       setError(err.message || "Invalid OTP code.");
     } finally {
@@ -152,7 +153,23 @@ export function AuthShell({ mode }: { mode: "login" | "signup" }) {
         </div>
         <div className="w-full max-w-md">
           <div className="glass-strong rounded-3xl p-8 shadow-glow">
-            {!needsOtp ? (
+            {verified ? (
+              <div className="flex flex-col items-center text-center">
+                <div className="grid h-16 w-16 place-items-center rounded-full bg-primary/10 text-primary shadow-glow mb-6">
+                  <CheckCircle2 className="h-8 w-8" />
+                </div>
+                <h1 className="text-3xl font-bold">Verified!</h1>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Your email has been successfully verified.
+                </p>
+                <button
+                  onClick={() => router.navigate({ to: "/dashboard" })}
+                  className="mt-8 w-full rounded-full bg-brand py-3 text-sm font-semibold text-primary-foreground shadow-glow transition-transform hover:scale-[1.02]"
+                >
+                  Continue to Dashboard
+                </button>
+              </div>
+            ) : !needsOtp ? (
               <>
                 <h1 className="text-3xl font-bold">
                   {isLogin ? "Welcome back" : "Create your account"}
