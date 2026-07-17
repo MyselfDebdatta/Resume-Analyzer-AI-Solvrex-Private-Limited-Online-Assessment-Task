@@ -468,6 +468,7 @@ function LoadingCard() {
 function ResultView({ role, scorecard, onReset, onNewAnalysis, github }: { role: string; scorecard: any; onReset: () => void; onNewAnalysis: () => void; github: string }) {
   const contentRef = useRef<HTMLDivElement>(null);
   const [ghData, setGhData] = useState<any>(null);
+  const [ghEvents, setGhEvents] = useState<any[]>([]);
 
   useEffect(() => {
     if (!github) return;
@@ -478,6 +479,13 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis, github }: { role:
       .then(res => res.json())
       .then(data => {
         if (!data.message) setGhData(data);
+      })
+      .catch(console.error);
+
+    fetch(`https://api.github.com/users/${username}/events/public?per_page=3`)
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data)) setGhEvents(data);
       })
       .catch(console.error);
   }, [github]);
@@ -709,6 +717,25 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis, github }: { role:
                   your overall score.
                 </p>
               </div>
+
+              {ghEvents.length > 0 && (
+                <div className="mt-4 rounded-2xl border border-border/60 p-3">
+                  <div className="text-xs font-semibold">Recent activity</div>
+                  <ul className="mt-2 space-y-2 text-[11px] text-muted-foreground">
+                    {ghEvents.map(e => {
+                      const type = e.type.replace("Event", "");
+                      const repo = e.repo.name.split("/").pop();
+                      const date = new Date(e.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+                      return (
+                        <li key={e.id} className="truncate">
+                          • <span className="font-medium text-foreground">{type}</span> on {repo} <span className="opacity-70">({date})</span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              )}
+
               <div className="mt-auto pt-4 text-[10px] text-muted-foreground text-center">
                 Live metrics fetched directly from GitHub API.
               </div>
