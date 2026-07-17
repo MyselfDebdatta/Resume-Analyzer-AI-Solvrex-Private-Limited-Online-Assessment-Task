@@ -49,6 +49,8 @@ export const Route = createFileRoute("/dashboard")({
 
 type Phase = "form" | "loading" | "result";
 
+let globalFileCache: File | null = null;
+
 function DashboardPage() {
   const router = useRouter();
   const stats = Route.useLoaderData();
@@ -62,7 +64,7 @@ function DashboardPage() {
     }
     return "form";
   });
-  const [file, setFile] = useState<File | null>(null);
+  const [file, setFile] = useState<File | null>(globalFileCache);
   const [jd, setJd] = useState(() => typeof window !== 'undefined' ? sessionStorage.getItem("analyzer_jd") || "" : "");
   const [role, setRole] = useState(() => typeof window !== 'undefined' ? sessionStorage.getItem("analyzer_role") || "" : "");
   const [github, setGithub] = useState(() => typeof window !== 'undefined' ? sessionStorage.getItem("analyzer_github") || "" : "");
@@ -77,6 +79,10 @@ function DashboardPage() {
   useEffect(() => {
     if (typeof window !== 'undefined') sessionStorage.setItem("analyzer_phase", phase);
   }, [phase]);
+
+  useEffect(() => {
+    globalFileCache = file;
+  }, [file]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
