@@ -104,10 +104,19 @@ export function AuthShell({ mode }: { mode: "login" | "signup" }) {
   };
 
   const handleSocialLogin = async (provider: "github" | "google") => {
-    await authClient.signIn.social({
-      provider,
-      callbackURL: "/",
-    });
+    try {
+      setError("");
+      setLoading(true);
+      const { error } = await authClient.signIn.social({
+        provider,
+        callbackURL: "/",
+      });
+      if (error) throw new Error(error.message || `Failed to sign in with ${provider}.`);
+    } catch (err: any) {
+      setError(err.message || "Something went wrong during social login.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
