@@ -1,5 +1,7 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
+import html2canvas from "html2canvas";
+import { jsPDF } from "jspdf";
 import { motion, AnimatePresence } from "motion/react";
 import { 
   Upload, 
@@ -470,8 +472,9 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis }: { role: string;
   const handleExportPdf = async () => {
     try {
       setIsExporting(true);
-      const html2canvas = (await import('html2canvas')).default;
-      const { jsPDF } = await import('jspdf');
+      
+      // Wait for any React re-renders or layout shifts
+      await new Promise(resolve => setTimeout(resolve, 100));
       
       const element = document.getElementById('scorecard-content');
       if (!element) return;
@@ -561,11 +564,8 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis }: { role: string;
         </div>
 
         {/* skills */}
-        <div className="glass-strong rounded-3xl p-6 shadow-card lg:col-span-2">
-          <div className="flex items-center justify-between">
-            <div className="text-sm font-semibold">Skill analysis</div>
-            <span className="text-xs text-muted-foreground">Expanded via NLP synonyms</span>
-          </div>
+        <div className="glass-strong rounded-3xl p-6 shadow-card lg:col-span-2 flex flex-col">
+          <div className="text-xs font-medium text-muted-foreground">Skill matches</div>
           <div className="mt-4 grid gap-6 md:grid-cols-2">
             <SkillBlock
               title="Matched skills"
@@ -578,6 +578,17 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis }: { role: string;
               missing={scorecard.missing_skills || []}
               tone="accent"
             />
+          </div>
+
+          <div className="mt-auto pt-6">
+            <div className="rounded-2xl bg-secondary/50 p-4 border border-border/50">
+              <div className="flex items-center gap-2 font-semibold text-sm">
+                <Sparkles className="h-4 w-4 text-brand" /> Action Plan
+              </div>
+              <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
+                To significantly boost your ATS match rate, focus on integrating the missing skills naturally into your recent experience bullets. Ensure that you use the exact terminology from the job description, as ATS systems often look for precise keyword matches.
+              </p>
+            </div>
           </div>
         </div>
       </div>
