@@ -46,3 +46,26 @@ export const getUserStatsFn = createServerFn({ method: "GET" })
 
     return { count, avgScore };
   });
+
+export const getHistoryFn = createServerFn({ method: "GET" })
+  .handler(async () => {
+    const request = getRequest();
+    const sessionData = await auth.api.getSession({ headers: request.headers });
+
+    if (!sessionData?.user) {
+      return [];
+    }
+
+    const analyses = await prisma.analysis.findMany({
+      where: { userId: sessionData.user.id },
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        role: true,
+        matchPercentage: true,
+        createdAt: true,
+      },
+    });
+
+    return analyses;
+  });
