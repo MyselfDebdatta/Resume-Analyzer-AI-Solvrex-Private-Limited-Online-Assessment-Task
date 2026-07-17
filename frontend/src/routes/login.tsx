@@ -213,6 +213,7 @@ export function AuthShell({ mode }: { mode: "login" | "signup" }) {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    hint={!isLogin ? "Minimum 8 characters" : undefined}
                   />
 
                   <button 
@@ -318,6 +319,7 @@ function Field({
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   required?: boolean;
+  hint?: string;
 }) {
   return (
     <label className="block">
@@ -333,6 +335,7 @@ function Field({
           className="w-full bg-transparent px-2 py-3 text-sm outline-none"
         />
       </div>
+      {hint && <div className="mt-1.5 px-1 text-xs text-muted-foreground">{hint}</div>}
     </label>
   );
 }
