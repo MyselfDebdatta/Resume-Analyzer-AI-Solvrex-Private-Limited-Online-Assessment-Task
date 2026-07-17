@@ -16,6 +16,7 @@ model User {
   updatedAt     DateTime
   sessions      Session[]
   accounts      Account[]
+  analyses      Analysis[]
 
   @@unique([email])
   @@map("user")
@@ -64,4 +65,16 @@ model Verification {
   updatedAt  DateTime?
 
   @@map("verification")
+}
+
+model Analysis {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role            String
+  matchPercentage Int
+  scorecard       Json
+  createdAt       DateTime @default(now())
+
+  @@map("analysis")
 }

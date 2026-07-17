@@ -24,6 +24,7 @@ import {
   Rocket
 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
+import { getUserStatsFn, saveAnalysisFn } from "@/lib/server-fns";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
@@ -35,6 +36,9 @@ export const Route = createFileRoute("/dashboard")({
       },
     ],
   }),
+  loader: async () => {
+    return await getUserStatsFn();
+  },
   component: DashboardPage,
 });
 
@@ -42,6 +46,7 @@ type Phase = "form" | "loading" | "result";
 
 function DashboardPage() {
   const router = useRouter();
+  const stats = Route.useLoaderData();
   const { data: sessionData, isPending } = authClient.useSession();
   const [phase, setPhase] = useState<Phase>("form");
   const [file, setFile] = useState<File | null>(null);
@@ -78,6 +83,17 @@ function DashboardPage() {
       }
       
       const data = await response.json();
+      
+      // Save analysis to the database
+      await saveAnalysisFn({
+        role: role,
+        matchPercentage: data.data.match_percentage,
+        scorecard: data.data,
+      });
+
+      // Refetch the dashboard stats
+      await router.invalidate();
+
       setScorecard(data.data);
       setPhase("result");
     } catch (error) {
@@ -146,19 +162,19 @@ function DashboardPage() {
                   <p className="text-xs text-muted-foreground truncate">{user.email}</p>
                 </div>
 
-                {/* Mock Statistics */}
+                {/* Real Statistics */}
                 <div className="mt-6 grid grid-cols-2 gap-3">
                   <div className="rounded-2xl bg-secondary/50 p-3 border border-border/40">
                     <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground mb-1">
                       <FileCheck className="h-3.5 w-3.5" /> Analyses
                     </div>
-                    <div className="text-xl font-bold">12</div>
+                    <div className="text-xl font-bold">{stats.count}</div>
                   </div>
                   <div className="rounded-2xl bg-secondary/50 p-3 border border-border/40">
                     <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground mb-1">
                       <Activity className="h-3.5 w-3.5" /> Avg Score
                     </div>
-                    <div className="text-xl font-bold text-gradient">78</div>
+                    <div className="text-xl font-bold text-gradient">{stats.avgScore}</div>
                   </div>
                 </div>
 
