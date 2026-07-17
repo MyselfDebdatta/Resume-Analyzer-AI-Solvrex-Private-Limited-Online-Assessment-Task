@@ -7,7 +7,7 @@ app = FastAPI(title="Resume Analyzer AI - Backend API")
 # Configure CORS for Frontend integration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # Will restrict to localhost:5173 / production URL later
+    allow_origins=["http://localhost:5173"], # Restrict to frontend URL
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
