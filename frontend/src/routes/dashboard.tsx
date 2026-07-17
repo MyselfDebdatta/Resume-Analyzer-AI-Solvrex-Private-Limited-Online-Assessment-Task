@@ -147,7 +147,7 @@ function DashboardPage() {
           
           {/* Enhanced Sidebar / Profile Card */}
           <div className="lg:col-span-1">
-            <div className="glass-strong rounded-3xl shadow-glow sticky top-24 overflow-hidden border border-border/50">
+            <div className="h-fit glass-strong rounded-3xl shadow-glow sticky top-24 overflow-hidden border border-border/50">
               <div className="h-24 bg-gradient-to-br from-brand/80 via-purple-500/80 to-blue-500/80 relative">
                 <div className="absolute inset-0 bg-mesh opacity-50 mix-blend-overlay"></div>
               </div>
