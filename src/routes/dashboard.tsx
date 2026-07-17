@@ -17,10 +17,13 @@ import {
   Download,
   LogOut,
   Calendar,
-  Clock
+  Clock,
+  ArrowLeft,
+  Activity,
+  FileCheck,
+  Rocket
 } from "lucide-react";
-import { SiteNav } from "@/components/site-nav";
-import { SiteFooter } from "@/components/site-footer";
+import { authClient } from "@/lib/auth-client";
 import { authClient } from "@/lib/auth-client";
 
 export const Route = createFileRoute("/dashboard")({
@@ -75,48 +78,90 @@ function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-hero flex flex-col">
-      <SiteNav />
+      {/* App Header */}
+      <header className="sticky top-0 z-50 w-full pt-3 px-4">
+        <div className="mx-auto max-w-7xl">
+          <nav className="glass-strong flex items-center justify-between rounded-full px-4 py-2.5 shadow-soft">
+            <div className="flex items-center gap-2 pl-2 font-display font-semibold">
+              <span className="grid h-8 w-8 place-items-center rounded-xl bg-brand text-primary-foreground shadow-glow">
+                <Rocket className="h-4 w-4" />
+              </span>
+              <span className="text-lg tracking-tight">Resume Analyzer AI</span>
+            </div>
+            <Link
+              to="/"
+              className="flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+            >
+              <ArrowLeft className="h-4 w-4" /> Back to Landing Page
+            </Link>
+          </nav>
+        </div>
+      </header>
+
       <main className="mx-auto w-full max-w-7xl px-4 py-8 flex-1">
         <div className="grid gap-8 lg:grid-cols-4">
           
-          {/* Sidebar / Profile Card */}
+          {/* Enhanced Sidebar / Profile Card */}
           <div className="lg:col-span-1">
-            <div className="glass-strong rounded-3xl p-6 shadow-glow sticky top-24">
-              <div className="flex items-center gap-4">
-                <div className="grid h-12 w-12 place-items-center rounded-full bg-brand text-primary-foreground font-bold text-xl shadow-glow">
-                  {user.name.charAt(0).toUpperCase()}
-                </div>
-                <div>
-                  <h2 className="font-bold">{user.name}</h2>
-                  <p className="text-xs text-muted-foreground truncate max-w-[150px]">{user.email}</p>
-                </div>
+            <div className="glass-strong rounded-3xl shadow-glow sticky top-24 overflow-hidden border border-border/50">
+              <div className="h-24 bg-gradient-to-br from-brand/80 via-purple-500/80 to-blue-500/80 relative">
+                <div className="absolute inset-0 bg-mesh opacity-50 mix-blend-overlay"></div>
               </div>
+              
+              <div className="px-6 pb-6 relative">
+                <div className="absolute -top-10 left-6 rounded-full p-1.5 glass-strong shadow-glow">
+                  <div className="grid h-16 w-16 place-items-center rounded-full bg-brand text-primary-foreground font-bold text-2xl shadow-inner">
+                    {user.name.charAt(0).toUpperCase()}
+                  </div>
+                </div>
+                
+                <div className="pt-10">
+                  <h2 className="font-bold text-xl">{user.name}</h2>
+                  <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                </div>
 
-              <div className="mt-8 space-y-4 text-sm">
-                <div className="flex items-center justify-between border-b border-border/50 pb-3">
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Calendar className="h-4 w-4" /> Account created
+                {/* Mock Statistics */}
+                <div className="mt-6 grid grid-cols-2 gap-3">
+                  <div className="rounded-2xl bg-secondary/50 p-3 border border-border/40">
+                    <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground mb-1">
+                      <FileCheck className="h-3.5 w-3.5" /> Analyses
+                    </div>
+                    <div className="text-xl font-bold">12</div>
                   </div>
-                  <div className="font-medium text-xs">
-                    {new Date(user.createdAt).toLocaleDateString()}
-                  </div>
-                </div>
-                <div className="flex items-center justify-between border-b border-border/50 pb-3">
-                  <div className="flex items-center gap-2 text-muted-foreground">
-                    <Clock className="h-4 w-4" /> Session started
-                  </div>
-                  <div className="font-medium text-xs">
-                    {new Date(session.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  <div className="rounded-2xl bg-secondary/50 p-3 border border-border/40">
+                    <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground mb-1">
+                      <Activity className="h-3.5 w-3.5" /> Avg Score
+                    </div>
+                    <div className="text-xl font-bold text-gradient">78</div>
                   </div>
                 </div>
+
+                <div className="mt-6 space-y-4 text-sm">
+                  <div className="flex flex-col gap-1 border-b border-border/50 pb-3">
+                    <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
+                      <Calendar className="h-3.5 w-3.5" /> Account created
+                    </div>
+                    <div className="font-semibold text-sm">
+                      {new Date(user.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-1 border-b border-border/50 pb-3">
+                    <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
+                      <Clock className="h-3.5 w-3.5" /> Session started
+                    </div>
+                    <div className="font-semibold text-sm">
+                      {new Date(session.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </div>
+                  </div>
+                </div>
+
+                <button 
+                  onClick={handleLogout}
+                  className="mt-6 w-full flex items-center justify-center gap-2 rounded-2xl border border-destructive/20 bg-destructive/5 text-destructive py-3 font-semibold text-sm hover:bg-destructive hover:text-destructive-foreground transition-all duration-200"
+                >
+                  <LogOut className="h-4 w-4" /> Secure Log out
+                </button>
               </div>
-
-              <button 
-                onClick={handleLogout}
-                className="mt-8 w-full flex items-center justify-center gap-2 rounded-xl bg-destructive/10 text-destructive py-2.5 font-semibold text-sm hover:bg-destructive/20 transition-colors"
-              >
-                <LogOut className="h-4 w-4" /> Log out
-              </button>
             </div>
           </div>
 
@@ -164,7 +209,6 @@ function DashboardPage() {
 
         </div>
       </main>
-      <SiteFooter />
     </div>
   );
 }
