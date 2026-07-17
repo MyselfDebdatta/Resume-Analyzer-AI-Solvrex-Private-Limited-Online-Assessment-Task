@@ -310,7 +310,8 @@ function Field({
   type = "text",
   value,
   onChange,
-  required
+  required,
+  hint
 }: {
   label: string;
   placeholder: string;
