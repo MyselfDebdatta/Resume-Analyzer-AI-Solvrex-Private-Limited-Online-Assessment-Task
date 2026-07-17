@@ -7,10 +7,10 @@ import { useState } from "react";
 export const Route = createFileRoute("/history")({
   head: () => ({
     meta: [
-      { title: "My History — ResumePilot" },
+      { title: "My History — Resume Analyzer AI" },
       {
         name: "description",
-        content: "Revisit every past resume scorecard from your ResumePilot account.",
+        content: "Revisit every past resume scorecard from your Resume Analyzer AI account.",
       },
     ],
   }),

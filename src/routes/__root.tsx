@@ -74,14 +74,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "ResumePilot — Smart ATS Score Checker & Resume Analyzer" },
+      { title: "Resume Analyzer AI — Smart ATS Score Checker & Resume Analyzer" },
       {
         name: "description",
         content:
-          "ResumePilot scans your resume against any job description and target role, giving a detailed ATS scorecard, keyword & skill analysis, GitHub insights, and personalized job suggestions.",
+          "Resume Analyzer AI scans your resume against any job description and target role, giving a detailed ATS scorecard, keyword & skill analysis, GitHub insights, and personalized job suggestions.",
       },
-      { name: "author", content: "ResumePilot" },
-      { property: "og:title", content: "ResumePilot — Smart ATS Score Checker" },
+      { name: "author", content: "Resume Analyzer AI" },
+      { property: "og:title", content: "Resume Analyzer AI — Smart ATS Score Checker" },
       {
         property: "og:description",
         content:

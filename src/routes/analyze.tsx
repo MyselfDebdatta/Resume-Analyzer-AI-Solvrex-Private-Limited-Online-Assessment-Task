@@ -22,7 +22,7 @@ import { SiteFooter } from "@/components/site-footer";
 export const Route = createFileRoute("/analyze")({
   head: () => ({
     meta: [
-      { title: "Analyze your resume — ResumePilot" },
+      { title: "Analyze your resume — Resume Analyzer AI" },
       {
         name: "description",
         content:
@@ -53,7 +53,7 @@ function AnalyzePage() {
       <main className="mx-auto max-w-6xl px-4 py-10 md:py-14">
         <div className="mb-8 text-center">
           <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
-            <Sparkles className="h-3.5 w-3.5" /> ResumePilot workspace
+            <Sparkles className="h-3.5 w-3.5" /> Resume Analyzer AI workspace
           </span>
           <h1 className="mt-3 text-4xl font-bold md:text-5xl">
             Score your resume in <span className="text-gradient">under a minute</span>.

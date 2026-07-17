@@ -78,7 +78,7 @@ function Hero() {
           </h1>
 
           <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl">
-            ResumePilot scans your resume against any job description and target role, then hands
+            Resume Analyzer AI scans your resume against any job description and target role, then hands
             back a detailed scorecard — skills matched, gaps to close, weak sections, and
             hand-picked job matches. All in one delightful workspace.
           </p>

@@ -6,10 +6,10 @@ import { authClient } from "../lib/auth-client";
 export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
-      { title: "Log in — ResumePilot" },
+      { title: "Log in — Resume Analyzer AI" },
       {
         name: "description",
-        content: "Log in to your ResumePilot account to access saved scorecards.",
+        content: "Log in to your Resume Analyzer AI account to access saved scorecards.",
       },
     ],
   }),
@@ -126,7 +126,7 @@ export function AuthShell({ mode }: { mode: "login" | "signup" }) {
           <span className="grid h-9 w-9 place-items-center rounded-xl bg-brand text-primary-foreground shadow-glow">
             <Rocket className="h-4 w-4" />
           </span>
-          <span className="text-lg">ResumePilot</span>
+          <span className="text-lg">Resume Analyzer AI</span>
         </Link>
         <div className="relative">
           <div className="absolute -inset-6 -z-10 rounded-[2rem] bg-mesh opacity-40 blur-2xl" />
@@ -140,7 +140,7 @@ export function AuthShell({ mode }: { mode: "login" | "signup" }) {
           </div>
         </div>
         <div className="text-xs text-muted-foreground">
-          © {new Date().getFullYear()} ResumePilot
+          © {new Date().getFullYear()} Resume Analyzer AI
         </div>
       </div>
 

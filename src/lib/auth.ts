@@ -2,9 +2,15 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { emailOTP } from "better-auth/plugins";
 import { prisma } from "./db";
-import { Resend } from "resend";
+import nodemailer from "nodemailer";
 
-const resend = new Resend(process.env.RESEND_API_KEY!);
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_APP_PASSWORD,
+  },
+});
 
 export const auth = betterAuth({
   baseURL: process.env.BETTER_AUTH_URL || "http://localhost:5173",
@@ -33,17 +39,14 @@ export const auth = betterAuth({
         console.log(`=======================\n\n`);
         
         try {
-          const { error } = await resend.emails.send({
-            from: "ResumePilot <onboarding@resend.dev>",
+          await transporter.sendMail({
+            from: `"Resume Analyzer AI" <${process.env.EMAIL_USER}>`,
             to: email,
-            subject: `Your ResumePilot Verification Code: ${otp}`,
-            html: `<div style="font-family: sans-serif; text-align: center;"><h1>ResumePilot</h1><p>Your verification code is: <strong>${otp}</strong></p></div>`,
+            subject: `Your Resume Analyzer AI Verification Code: ${otp}`,
+            html: `<div style="font-family: sans-serif; text-align: center;"><h1>Resume Analyzer AI</h1><p>Your verification code is: <strong>${otp}</strong></p></div>`,
           });
-          if (error) {
-            console.error("Failed to send OTP via Resend:", error);
-          }
         } catch (err) {
-          console.error("Exception while sending OTP:", err);
+          console.error("Exception while sending OTP via Nodemailer:", err);
         }
       },
     }),

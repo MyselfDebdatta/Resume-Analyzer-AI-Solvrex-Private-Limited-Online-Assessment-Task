@@ -4,10 +4,10 @@ import { AuthShell } from "./login";
 export const Route = createFileRoute("/signup")({
   head: () => ({
     meta: [
-      { title: "Sign up — ResumePilot" },
+      { title: "Sign up — Resume Analyzer AI" },
       {
         name: "description",
-        content: "Create a free ResumePilot account and save every scorecard.",
+        content: "Create a free Resume Analyzer AI account and save every scorecard.",
       },
     ],
   }),

@@ -12,7 +12,7 @@ export function SiteNav() {
             <span className="grid h-8 w-8 place-items-center rounded-xl bg-brand text-primary-foreground shadow-glow">
               <Rocket className="h-4 w-4" />
             </span>
-            <span className="text-lg tracking-tight">ResumePilot</span>
+            <span className="text-lg tracking-tight">Resume Analyzer AI</span>
           </Link>
 
           <div className="hidden items-center gap-1 text-sm font-medium md:flex">

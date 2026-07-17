@@ -11,7 +11,7 @@ export function SiteFooter() {
               <span className="grid h-8 w-8 place-items-center rounded-xl bg-brand text-primary-foreground shadow-glow">
                 <Rocket className="h-4 w-4" />
               </span>
-              <span className="text-lg">ResumePilot</span>
+              <span className="text-lg">Resume Analyzer AI</span>
             </Link>
             <p className="mt-3 max-w-sm text-sm text-muted-foreground">
               A smart co-pilot for your job search. Understand your resume the way an ATS does —
@@ -81,7 +81,7 @@ export function SiteFooter() {
           </div>
         </div>
         <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-border/60 pt-6 text-xs text-muted-foreground md:flex-row">
-          <span>© {new Date().getFullYear()} ResumePilot. Crafted with care.</span>
+          <span>© {new Date().getFullYear()} Resume Analyzer AI. Crafted with care.</span>
           <span>Made for candidates who deserve a better shot.</span>
         </div>
       </div>

@@ -14,7 +14,6 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as AnalyzeRouteImport } from './routes/analyze'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as ApiTest2RouteImport } from './routes/api/test2'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
 const SignupRoute = SignupRouteImport.update({
@@ -42,11 +41,6 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiTest2Route = ApiTest2RouteImport.update({
-  id: '/api/test2',
-  path: '/api/test2',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
@@ -59,7 +53,6 @@ export interface FileRoutesByFullPath {
   '/history': typeof HistoryRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
-  '/api/test2': typeof ApiTest2Route
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesByTo {
@@ -68,7 +61,6 @@ export interface FileRoutesByTo {
   '/history': typeof HistoryRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
-  '/api/test2': typeof ApiTest2Route
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRoutesById {
@@ -78,28 +70,14 @@ export interface FileRoutesById {
   '/history': typeof HistoryRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
-  '/api/test2': typeof ApiTest2Route
   '/api/auth/$': typeof ApiAuthSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
-    | '/analyze'
-    | '/history'
-    | '/login'
-    | '/signup'
-    | '/api/test2'
-    | '/api/auth/$'
+    '/' | '/analyze' | '/history' | '/login' | '/signup' | '/api/auth/$'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/analyze'
-    | '/history'
-    | '/login'
-    | '/signup'
-    | '/api/test2'
-    | '/api/auth/$'
+  to: '/' | '/analyze' | '/history' | '/login' | '/signup' | '/api/auth/$'
   id:
     | '__root__'
     | '/'
@@ -107,7 +85,6 @@ export interface FileRouteTypes {
     | '/history'
     | '/login'
     | '/signup'
-    | '/api/test2'
     | '/api/auth/$'
   fileRoutesById: FileRoutesById
 }
@@ -117,7 +94,6 @@ export interface RootRouteChildren {
   HistoryRoute: typeof HistoryRoute
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
-  ApiTest2Route: typeof ApiTest2Route
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
@@ -158,13 +134,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/test2': {
-      id: '/api/test2'
-      path: '/api/test2'
-      fullPath: '/api/test2'
-      preLoaderRoute: typeof ApiTest2RouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/api/auth/$': {
       id: '/api/auth/$'
       path: '/api/auth/$'
@@ -181,7 +150,6 @@ const rootRouteChildren: RootRouteChildren = {
   HistoryRoute: HistoryRoute,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
-  ApiTest2Route: ApiTest2Route,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport
