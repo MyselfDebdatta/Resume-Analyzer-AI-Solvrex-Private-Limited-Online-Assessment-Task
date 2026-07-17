@@ -74,7 +74,7 @@ function Hero() {
 
           <h1 className="mt-6 text-5xl font-bold leading-[1.05] tracking-tight md:text-7xl">
             Land interviews with a resume{" "}
-            <span className="text-gradient animate-gradient bg-brand">built to beat the ATS.</span>
+            <span className="text-gradient animate-gradient">built to beat the ATS.</span>
           </h1>
 
           <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground md:text-xl">
