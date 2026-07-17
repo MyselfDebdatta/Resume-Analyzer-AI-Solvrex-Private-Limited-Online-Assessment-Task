@@ -37,27 +37,27 @@ def generate_scorecard(resume_text: str, jd_text: str, role: str) -> dict:
     }}
     """
     
-    response = client.chat.completions.create(
-        messages=[
-            {
-                "role": "system",
-                "content": "You are a world-class ATS Resume Analyzer. Always output raw JSON only, without ```json markdown wrappers."
-            },
-            {
-                "role": "user",
-                "content": prompt
-            }
-        ],
-        model="llama3-70b-8192",
-        temperature=0.2,
-        response_format={"type": "json_object"}
-    )
-    
-    result = response.choices[0].message.content
     try:
+        response = client.chat.completions.create(
+            messages=[
+                {
+                    "role": "system",
+                    "content": "You are a world-class ATS Resume Analyzer. Always output raw JSON only, without ```json markdown wrappers."
+                },
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ],
+            model="llama-3.3-70b-versatile",
+            temperature=0.2,
+            response_format={"type": "json_object"}
+        )
+        
+        result = response.choices[0].message.content
         return json.loads(result)
     except Exception as e:
-        print("Failed to parse JSON:", result)
+        print(f"LLM API Error: {str(e)}")
         # Fallback empty structure
         return {
             "match_percentage": 50,
