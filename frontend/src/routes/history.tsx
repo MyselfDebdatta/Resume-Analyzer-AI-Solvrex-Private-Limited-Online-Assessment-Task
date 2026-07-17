@@ -65,9 +65,9 @@ function HistoryPage() {
       setIsDeleting(true); // reusing this loading state to disable buttons during fetch
       const analysis = await getAnalysisByIdFn({ data: id });
       
-      sessionStorage.setItem("analyzer_role", JSON.stringify(analysis.role));
+      sessionStorage.setItem("analyzer_role", analysis.role);
       sessionStorage.setItem("analyzer_scorecard", JSON.stringify(analysis.scorecard));
-      sessionStorage.setItem("analyzer_phase", JSON.stringify("result"));
+      sessionStorage.setItem("analyzer_phase", "result");
       
       router.navigate({ to: "/dashboard" });
     } catch (err) {
