@@ -199,9 +199,16 @@ function DashboardPage() {
                   </div>
                 </div>
 
+                <Link
+                  to="/history"
+                  className="mt-6 w-full flex items-center justify-center gap-2 rounded-2xl border border-brand/20 bg-brand/5 text-brand py-3 font-semibold text-sm hover:bg-brand hover:text-primary-foreground transition-all duration-200"
+                >
+                  <FileText className="h-4 w-4" /> View Analysis History
+                </Link>
+
                 <button 
                   onClick={handleLogout}
-                  className="mt-6 w-full flex items-center justify-center gap-2 rounded-2xl border border-destructive/20 bg-destructive/5 text-destructive py-3 font-semibold text-sm hover:bg-destructive hover:text-destructive-foreground transition-all duration-200"
+                  className="mt-3 w-full flex items-center justify-center gap-2 rounded-2xl border border-destructive/20 bg-destructive/5 text-destructive py-3 font-semibold text-sm hover:bg-destructive hover:text-destructive-foreground transition-all duration-200"
                 >
                   <LogOut className="h-4 w-4" /> Secure Log out
                 </button>
@@ -617,11 +624,7 @@ function ResultView({ role, scorecard, onReset }: { role: string; scorecard: any
         </div>
       </div>
 
-      <div className="text-center text-sm">
-        <Link to="/history" className="text-primary hover:underline">
-          View all past scorecards →
-        </Link>
-      </div>
+
     </div>
   );
 }
