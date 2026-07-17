@@ -248,7 +248,7 @@ function HistoryPage() {
         </div>
       </main>
 
-      {/* Single Item Delete Modal */}
+      {/* Single Item Delete Modal (GitHub Style) */}
       {deleteConfirmId && (
         <div className="fixed inset-0 z-[100] grid place-items-center bg-background/80 backdrop-blur-sm p-4">
           <div className="w-full max-w-md rounded-3xl border border-border/60 bg-card p-6 shadow-glow">
@@ -258,29 +258,47 @@ function HistoryPage() {
               </div>
               <h3 className="text-lg font-bold text-foreground">Delete Analysis</h3>
             </div>
-            <p className="mt-4 text-sm text-muted-foreground">
-              Are you sure you want to delete this analysis? This action cannot be undone.
-            </p>
+            <div className="mt-4 space-y-4 text-sm text-muted-foreground">
+              <p>
+                Are you sure you want to delete this analysis? This action cannot be undone.
+              </p>
+              <div>
+                <label className="block text-xs font-semibold text-foreground mb-1">
+                  Please type <strong>delete</strong> to confirm.
+                </label>
+                <input
+                  type="text"
+                  value={confirmText}
+                  onChange={(e) => setConfirmText(e.target.value)}
+                  className="w-full rounded-xl border border-border bg-background px-3 py-2 outline-none focus:border-destructive"
+                  placeholder="delete"
+                />
+              </div>
+            </div>
             <div className="mt-6 flex justify-end gap-3">
               <button
                 disabled={isDeleting}
-                onClick={() => setDeleteConfirmId(null)}
+                onClick={() => {
+                  setDeleteConfirmId(null);
+                  setConfirmText("");
+                }}
                 className="rounded-full border border-border px-4 py-2 text-sm font-semibold hover:bg-secondary"
               >
                 Cancel
               </button>
               <button
-                disabled={isDeleting}
+                disabled={confirmText !== "delete" || isDeleting}
                 onClick={async () => {
                   setIsDeleting(true);
                   await deleteAnalysisFn({ data: deleteConfirmId });
                   await router.invalidate();
                   setIsDeleting(false);
                   setDeleteConfirmId(null);
+                  setConfirmText("");
                 }}
                 className="rounded-full bg-destructive px-4 py-2 text-sm font-semibold text-destructive-foreground shadow-glow disabled:opacity-50"
               >
-                {isDeleting ? "Deleting..." : "Yes, Delete"}
+                {isDeleting ? "Deleting..." : "I understand, delete analysis"}
               </button>
             </div>
           </div>
