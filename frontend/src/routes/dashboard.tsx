@@ -445,17 +445,44 @@ function LoadingCard() {
 }
 
 function ResultView({ role, scorecard, onReset, onNewAnalysis }: { role: string; scorecard: any; onReset: () => void; onNewAnalysis: () => void }) {
+  const [isExporting, setIsExporting] = useState(false);
+
+  const handleExportPdf = async () => {
+    try {
+      setIsExporting(true);
+      const html2canvas = (await import('html2canvas')).default;
+      const { jsPDF } = await import('jspdf');
+      
+      const element = document.getElementById('scorecard-content');
+      if (!element) return;
+      
+      const canvas = await html2canvas(element, { scale: 2, useCORS: true });
+      const data = canvas.toDataURL('image/png');
+      
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      
+      pdf.addImage(data, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`Scorecard_${role}.pdf`);
+    } catch (err) {
+      console.error("Failed to export PDF", err);
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   return (
-    <div className="space-y-6">
+    <div id="scorecard-content" className="space-y-6 bg-hero pb-4 rounded-3xl">
       {/* header */}
       <div className="glass-strong flex flex-wrap items-center justify-between gap-4 rounded-3xl p-6 shadow-glow">
         <div>
           <div className="text-xs font-medium text-muted-foreground">Scorecard · {role}</div>
           <div className="mt-1 text-2xl font-bold">
-            Your resume is a <span className="text-gradient">strong fit</span>.
+            Your resume is a <span className="text-gradient">{scorecard.match_percentage >= 80 ? 'strong fit' : scorecard.match_percentage >= 60 ? 'moderate fit' : 'weak fit'}</span>.
           </div>
         </div>
-        <div className="flex gap-2">
+        <div data-html2canvas-ignore className="flex flex-wrap gap-2">
           <button
             onClick={onNewAnalysis}
             className="inline-flex items-center gap-1.5 rounded-full border border-brand/30 bg-brand/10 text-brand px-4 py-2 text-sm font-semibold hover:bg-brand hover:text-primary-foreground transition-all"
@@ -468,8 +495,13 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis }: { role: string;
           >
             <RefreshCw className="h-3.5 w-3.5" /> Re-analyze
           </button>
-          <button className="inline-flex items-center gap-1.5 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-primary-foreground shadow-glow">
-            <Download className="h-3.5 w-3.5" /> Export PDF
+          <button 
+            onClick={handleExportPdf}
+            disabled={isExporting}
+            className="inline-flex items-center gap-1.5 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-primary-foreground shadow-glow disabled:opacity-70"
+          >
+            {isExporting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Download className="h-3.5 w-3.5" />} 
+            {isExporting ? "Exporting..." : "Export PDF"}
           </button>
         </div>
       </div>
@@ -708,17 +740,21 @@ function SkillBlock({
           </span>
         ))}
       </div>
-      <div className="mt-3 text-xs font-medium text-muted-foreground">Missing from resume</div>
-      <div className="mt-2 flex flex-wrap gap-1.5">
-        {missing.map((s) => (
-          <span
-            key={s}
-            className="rounded-full border border-dashed border-destructive/40 bg-destructive/5 px-2.5 py-1 text-xs font-medium text-destructive"
-          >
-            {s}
-          </span>
-        ))}
-      </div>
+      {missing.length > 0 && (
+        <>
+          <div className="mt-3 text-xs font-medium text-muted-foreground">Missing from resume</div>
+          <div className="mt-2 flex flex-wrap gap-1.5">
+            {missing.map((s) => (
+              <span
+                key={s}
+                className="rounded-full border border-dashed border-destructive/40 bg-destructive/5 px-2.5 py-1 text-xs font-medium text-destructive"
+              >
+                {s}
+              </span>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }

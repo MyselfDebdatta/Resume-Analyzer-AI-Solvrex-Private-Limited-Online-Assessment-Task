@@ -70,6 +70,25 @@ export const getHistoryFn = createServerFn({ method: "GET" })
     return analyses;
   });
 
+export const getAnalysisByIdFn = createServerFn({ method: "POST" })
+  .validator((id: string) => id)
+  .handler(async ({ data: id }) => {
+    const request = getRequest();
+    const sessionData = await auth.api.getSession({ headers: request.headers });
+
+    if (!sessionData?.user) {
+      throw new Error("Unauthorized");
+    }
+
+    const analysis = await prisma.analysis.findUnique({
+      where: { id },
+      select: { role: true, scorecard: true }
+    });
+
+    if (!analysis) throw new Error("Not found");
+    return analysis;
+  });
+
 export const deleteAnalysisFn = createServerFn({ method: "POST" })
   .validator((id: string) => id)
   .handler(async ({ data: id }) => {

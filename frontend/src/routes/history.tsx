@@ -2,7 +2,7 @@ import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { Clock, Search, ChevronRight, Sparkles, Rocket, ArrowLeft, Home, LogOut, Calendar, Activity, FileCheck, Trash2, AlertTriangle } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
-import { getUserStatsFn, getHistoryFn, deleteAnalysisFn, clearHistoryFn } from "@/lib/server-fns";
+import { getUserStatsFn, getHistoryFn, deleteAnalysisFn, clearHistoryFn, getAnalysisByIdFn } from "@/lib/server-fns";
 
 export const Route = createFileRoute("/history")({
   head: () => ({
@@ -58,6 +58,23 @@ function HistoryPage() {
   const handleLogout = async () => {
     await authClient.signOut();
     router.navigate({ to: "/" });
+  };
+
+  const handleOpenAnalysis = async (id: string) => {
+    try {
+      setIsDeleting(true); // reusing this loading state to disable buttons during fetch
+      const analysis = await getAnalysisByIdFn({ data: id });
+      
+      sessionStorage.setItem("analyzer_role", JSON.stringify(analysis.role));
+      sessionStorage.setItem("analyzer_scorecard", JSON.stringify(analysis.scorecard));
+      sessionStorage.setItem("analyzer_phase", JSON.stringify("result"));
+      
+      router.navigate({ to: "/dashboard" });
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   return (
@@ -229,12 +246,13 @@ function HistoryPage() {
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
-                    <Link
-                      to="/dashboard"
-                      className="inline-flex flex-shrink-0 items-center gap-1 rounded-full border border-border px-4 py-2 text-xs font-semibold hover:bg-secondary transition-colors"
+                    <button
+                      onClick={() => handleOpenAnalysis(it.id)}
+                      disabled={isDeleting}
+                      className="inline-flex flex-shrink-0 items-center gap-1 rounded-full border border-border px-4 py-2 text-xs font-semibold hover:bg-secondary transition-colors disabled:opacity-50"
                     >
                       Open Analysis <ChevronRight className="h-3 w-3" />
-                    </Link>
+                    </button>
                   </div>
                 </div>
               ))}
