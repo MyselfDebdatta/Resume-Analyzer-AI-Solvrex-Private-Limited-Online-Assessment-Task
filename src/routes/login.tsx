@@ -1,5 +1,7 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { Rocket, Mail, Lock, Github } from "lucide-react";
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
+import { Rocket, Mail, Lock, Github, Chrome } from "lucide-react";
+import { useState } from "react";
+import { authClient } from "../lib/auth-client";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
@@ -20,6 +22,79 @@ function LoginPage() {
 
 export function AuthShell({ mode }: { mode: "login" | "signup" }) {
   const isLogin = mode === "login";
+  const router = useRouter();
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const [needsOtp, setNeedsOtp] = useState(false);
+  const [otp, setOtp] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    try {
+      if (isLogin) {
+        const { error: signInError } = await authClient.signIn.email({
+          email,
+          password,
+        });
+        if (signInError) throw new Error(signInError.message);
+        router.navigate({ to: "/" });
+      } else {
+        const { error: signUpError } = await authClient.signUp.email({
+          name,
+          email,
+          password,
+        });
+        if (signUpError) throw new Error(signUpError.message);
+        
+        // Send OTP
+        const { error: otpError } = await authClient.emailOtp.sendVerificationOtp({
+          email,
+          type: "email-verification",
+        });
+        if (otpError) throw new Error(otpError.message);
+        
+        setNeedsOtp(true);
+      }
+    } catch (err: any) {
+      setError(err.message || "Something went wrong.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleVerifyOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    try {
+      const { error: verifyError } = await authClient.emailOtp.verifyEmail({
+        email,
+        otp,
+      });
+      if (verifyError) throw new Error(verifyError.message);
+      router.navigate({ to: "/" });
+    } catch (err: any) {
+      setError(err.message || "Invalid OTP code.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSocialLogin = async (provider: "github" | "google") => {
+    await authClient.signIn.social({
+      provider,
+      callbackURL: "/",
+    });
+  };
+
   return (
     <div className="grid min-h-screen bg-hero lg:grid-cols-2">
       <div className="hidden flex-col justify-between p-10 lg:flex">
@@ -48,56 +123,129 @@ export function AuthShell({ mode }: { mode: "login" | "signup" }) {
       <div className="flex items-center justify-center p-6 md:p-10">
         <div className="w-full max-w-md">
           <div className="glass-strong rounded-3xl p-8 shadow-glow">
-            <h1 className="text-3xl font-bold">
-              {isLogin ? "Welcome back" : "Create your account"}
-            </h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {isLogin
-                ? "Log in to see your saved scorecards."
-                : "Start scoring resumes in seconds."}
-            </p>
+            {!needsOtp ? (
+              <>
+                <h1 className="text-3xl font-bold">
+                  {isLogin ? "Welcome back" : "Create your account"}
+                </h1>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {isLogin
+                    ? "Log in to see your saved scorecards."
+                    : "Start scoring resumes in seconds."}
+                </p>
 
-            <form className="mt-6 space-y-4" onSubmit={(e) => e.preventDefault()}>
-              {!isLogin && <Field label="Full name" placeholder="Alex Rivera" />}
-              <Field label="Email" placeholder="you@work.com" icon={<Mail className="h-4 w-4" />} />
-              <Field
-                label="Password"
-                placeholder="••••••••"
-                icon={<Lock className="h-4 w-4" />}
-                type="password"
-              />
+                {error && (
+                  <div className="mt-4 rounded-xl bg-destructive/10 p-3 text-sm text-destructive">
+                    {error}
+                  </div>
+                )}
 
-              <button className="w-full rounded-full bg-brand py-3 text-sm font-semibold text-primary-foreground shadow-glow transition-transform hover:scale-[1.02]">
-                {isLogin ? "Log in" : "Create account"}
-              </button>
-            </form>
+                <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
+                  {!isLogin && (
+                    <Field 
+                      label="Full name" 
+                      placeholder="Alex Rivera" 
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      required
+                    />
+                  )}
+                  <Field 
+                    label="Email" 
+                    placeholder="you@work.com" 
+                    icon={<Mail className="h-4 w-4" />} 
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    type="email"
+                    required
+                  />
+                  <Field
+                    label="Password"
+                    placeholder="••••••••"
+                    icon={<Lock className="h-4 w-4" />}
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
 
-            <div className="my-6 flex items-center gap-3 text-xs text-muted-foreground">
-              <div className="h-px flex-1 bg-border" /> or continue with{" "}
-              <div className="h-px flex-1 bg-border" />
-            </div>
+                  <button 
+                    disabled={loading}
+                    className="w-full rounded-full bg-brand py-3 text-sm font-semibold text-primary-foreground shadow-glow transition-transform hover:scale-[1.02] disabled:opacity-70 disabled:hover:scale-100"
+                  >
+                    {loading ? "Please wait..." : (isLogin ? "Log in" : "Create account")}
+                  </button>
+                </form>
 
-            <button className="flex w-full items-center justify-center gap-2 rounded-full border border-border bg-card py-3 text-sm font-semibold hover:bg-secondary">
-              <Github className="h-4 w-4" /> Continue with GitHub
-            </button>
+                <div className="my-6 flex items-center gap-3 text-xs text-muted-foreground">
+                  <div className="h-px flex-1 bg-border" /> or continue with{" "}
+                  <div className="h-px flex-1 bg-border" />
+                </div>
 
-            <p className="mt-6 text-center text-xs text-muted-foreground">
-              {isLogin ? (
-                <>
-                  Don't have an account?{" "}
-                  <Link to="/signup" className="font-semibold text-primary hover:underline">
-                    Sign up
-                  </Link>
-                </>
-              ) : (
-                <>
-                  Already have an account?{" "}
-                  <Link to="/login" className="font-semibold text-primary hover:underline">
-                    Log in
-                  </Link>
-                </>
-              )}
-            </p>
+                <div className="space-y-3">
+                  <button 
+                    onClick={() => handleSocialLogin("github")}
+                    className="flex w-full items-center justify-center gap-2 rounded-full border border-border bg-card py-3 text-sm font-semibold hover:bg-secondary"
+                  >
+                    <Github className="h-4 w-4" /> Continue with GitHub
+                  </button>
+                  <button 
+                    onClick={() => handleSocialLogin("google")}
+                    className="flex w-full items-center justify-center gap-2 rounded-full border border-border bg-card py-3 text-sm font-semibold hover:bg-secondary"
+                  >
+                    <Chrome className="h-4 w-4" /> Continue with Google
+                  </button>
+                </div>
+
+                <p className="mt-6 text-center text-xs text-muted-foreground">
+                  {isLogin ? (
+                    <>
+                      Don't have an account?{" "}
+                      <Link to="/signup" className="font-semibold text-primary hover:underline">
+                        Sign up
+                      </Link>
+                    </>
+                  ) : (
+                    <>
+                      Already have an account?{" "}
+                      <Link to="/login" className="font-semibold text-primary hover:underline">
+                        Log in
+                      </Link>
+                    </>
+                  )}
+                </p>
+              </>
+            ) : (
+              <>
+                <h1 className="text-3xl font-bold">Check your email</h1>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  We sent a 6-digit verification code to <strong>{email}</strong>.
+                </p>
+
+                {error && (
+                  <div className="mt-4 rounded-xl bg-destructive/10 p-3 text-sm text-destructive">
+                    {error}
+                  </div>
+                )}
+
+                <form className="mt-6 space-y-4" onSubmit={handleVerifyOtp}>
+                  <Field 
+                    label="Verification Code" 
+                    placeholder="123456" 
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
+                    required
+                  />
+
+                  <button 
+                    disabled={loading}
+                    className="w-full rounded-full bg-brand py-3 text-sm font-semibold text-primary-foreground shadow-glow transition-transform hover:scale-[1.02] disabled:opacity-70 disabled:hover:scale-100"
+                  >
+                    {loading ? "Verifying..." : "Verify Code"}
+                  </button>
+                </form>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -110,11 +258,17 @@ function Field({
   placeholder,
   icon,
   type = "text",
+  value,
+  onChange,
+  required
 }: {
   label: string;
   placeholder: string;
   icon?: React.ReactNode;
   type?: string;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  required?: boolean;
 }) {
   return (
     <label className="block">
@@ -124,6 +278,9 @@ function Field({
         <input
           type={type}
           placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+          required={required}
           className="w-full bg-transparent px-2 py-3 text-sm outline-none"
         />
       </div>
