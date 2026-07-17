@@ -340,7 +340,6 @@ function DashboardPage() {
                       runAnalysis();
                     } else {
                       setToast("For your privacy, we don't store your resume files permanently. Please re-upload your resume to re-analyze.");
-                      setTimeout(() => setToast(null), 5000);
                       setPhase("form");
                     }
                   }} onNewAnalysis={() => {
@@ -360,21 +359,35 @@ function DashboardPage() {
         </div>
       </main>
 
-      {/* Toast Notification */}
+      {/* Modal Notification */}
       <AnimatePresence>
         {toast && (
-          <motion.div
-            initial={{ opacity: 0, y: 50, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="fixed bottom-6 right-6 z-50 flex max-w-sm items-start gap-3 rounded-2xl border border-border/50 bg-card p-4 shadow-glow"
-          >
-            <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-brand" />
-            <div className="text-sm font-medium leading-relaxed">{toast}</div>
-            <button onClick={() => setToast(null)} className="shrink-0 rounded-full p-1 text-muted-foreground hover:bg-secondary hover:text-foreground">
-              <X className="h-4 w-4" />
-            </button>
-          </motion.div>
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/60 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              className="w-full max-w-md rounded-3xl border border-border/50 bg-card p-6 shadow-glow"
+            >
+              <div className="flex items-start gap-4">
+                <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-brand/10 text-brand">
+                  <AlertTriangle className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-lg">Action Required</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{toast}</p>
+                </div>
+              </div>
+              <div className="mt-6 flex justify-end">
+                <button
+                  onClick={() => setToast(null)}
+                  className="rounded-full bg-brand px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-glow transition-transform hover:scale-105"
+                >
+                  OK
+                </button>
+              </div>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
     </div>
