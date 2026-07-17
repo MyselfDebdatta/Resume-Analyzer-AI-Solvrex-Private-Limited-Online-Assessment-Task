@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
-import { Rocket, Mail, Lock, Github, Chrome, ArrowLeft, CheckCircle2 } from "lucide-react";
+import { Rocket, Mail, Lock, Github, Chrome, ArrowLeft, CheckCircle2, Brain, Briefcase, ShieldCheck, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { authClient } from "../lib/auth-client";
 
@@ -132,12 +132,27 @@ export function AuthShell({ mode }: { mode: "login" | "signup" }) {
         <div className="relative">
           <div className="absolute -inset-6 -z-10 rounded-[2rem] bg-mesh opacity-40 blur-2xl" />
           <div className="glass-strong rounded-[2rem] p-8 shadow-glow">
-            <div className="text-xs font-medium text-muted-foreground">Latest scorecard</div>
-            <div className="mt-2 text-3xl font-bold text-gradient">87 / 100</div>
-            <p className="mt-2 text-sm text-muted-foreground">
-              "The section-level feedback is what did it — I jumped from 62 to 91 in two rewrites."
-            </p>
-            <div className="mt-4 text-xs font-medium">Ananya P. · Data Analyst at Ramp</div>
+            <div className="flex items-center gap-2 text-sm font-semibold mb-6">
+              <Sparkles className="h-4 w-4 text-primary" /> Unlock full access
+            </div>
+            <div className="space-y-5">
+              {[
+                { icon: Brain, title: "Blended ATS Score", desc: "Detailed breakdown of semantic match, keywords, and section quality." },
+                { icon: Briefcase, title: "Live Job Matches", desc: "Open roles dynamically sourced from LinkedIn based on your exact skills." },
+                { icon: Github, title: "GitHub Insights", desc: "Real-time commit and PR activity to back up your technical experience." },
+                { icon: ShieldCheck, title: "100% Private", desc: "Your resume is analyzed locally and never used to train global LLMs." }
+              ].map((feature, idx) => (
+                <div key={idx} className="flex items-start gap-4">
+                  <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-brand/10 text-brand">
+                    <feature.icon className="h-5 w-5" />
+                  </div>
+                  <div className="mt-0.5">
+                    <h3 className="text-sm font-bold">{feature.title}</h3>
+                    <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{feature.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
         <div className="text-xs text-muted-foreground">
