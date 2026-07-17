@@ -774,25 +774,25 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis, github }: { role:
         <div className="mt-4 grid gap-3 md:grid-cols-2">
           {[
             {
-              t: "Senior Data Analyst",
-              c: "Ramp",
-              loc: "New York, US (Hybrid)",
+              t: `Senior ${role}`,
+              c: "Stripe",
+              loc: "Remote, US",
               s: "$140k – $180k",
-              m: 94,
+              m: Math.min(98, Math.round((scorecard.match_percentage || 80) + 12)),
             },
-            { t: "Analytics Engineer", c: "Notion", loc: "Remote", s: "$150k – $190k", m: 89 },
-            { t: "BI Developer", c: "Stripe", loc: "Dublin, IE", s: "€90k – €120k", m: 82 },
+            { t: role, c: "Notion", loc: "San Francisco, US (Hybrid)", s: "$150k – $190k", m: Math.min(95, Math.round((scorecard.match_percentage || 80) + 5)) },
+            { t: `Lead ${role}`, c: "Airbnb", loc: "New York, US", s: "$180k – $220k", m: Math.min(90, Math.round((scorecard.match_percentage || 80) - 4)) },
             {
-              t: "Data Analyst II",
-              c: "Airbnb",
-              loc: "San Francisco, US",
+              t: `${role} II`,
+              c: "Ramp",
+              loc: "Remote",
               s: "$130k – $160k",
-              m: 80,
+              m: Math.min(85, Math.round((scorecard.match_percentage || 80) - 8)),
             },
-          ].map((j) => (
+          ].map((j, i) => (
             <div
-              key={j.t}
-              className="flex items-center justify-between rounded-2xl border border-border/60 bg-card p-4"
+              key={i}
+              className="flex items-center justify-between rounded-2xl border border-border/60 bg-card p-4 transition-all hover:border-brand/30 hover:shadow-glow"
             >
               <div>
                 <div className="text-sm font-semibold">{j.t}</div>
@@ -809,9 +809,14 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis, github }: { role:
                 <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">
                   {j.m}% match
                 </span>
-                <button className="rounded-full bg-brand px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-glow">
+                <a 
+                  href={`https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(j.t + ' ' + j.c)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full bg-brand px-3 py-1.5 text-xs font-semibold text-primary-foreground shadow-glow inline-block text-center hover:bg-brand/90 transition-colors"
+                >
                   Apply
-                </button>
+                </a>
               </div>
             </div>
           ))}
