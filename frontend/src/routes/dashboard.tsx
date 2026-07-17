@@ -1,7 +1,6 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
-import { useState, useEffect } from "react";
-import html2canvas from "html2canvas";
-import { jsPDF } from "jspdf";
+import { useState, useEffect, useRef } from "react";
+import { useReactToPrint } from "react-to-print";
 import { motion, AnimatePresence } from "motion/react";
 import { 
   Upload, 
@@ -467,36 +466,15 @@ function LoadingCard() {
 }
 
 function ResultView({ role, scorecard, onReset, onNewAnalysis }: { role: string; scorecard: any; onReset: () => void; onNewAnalysis: () => void }) {
-  const [isExporting, setIsExporting] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
 
-  const handleExportPdf = async () => {
-    try {
-      setIsExporting(true);
-      
-      // Wait for any React re-renders or layout shifts
-      await new Promise(resolve => setTimeout(resolve, 100));
-      
-      const element = document.getElementById('scorecard-content');
-      if (!element) return;
-      
-      const canvas = await html2canvas(element, { scale: 2, useCORS: true });
-      const data = canvas.toDataURL('image/png');
-      
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-      
-      pdf.addImage(data, 'PNG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save(`Scorecard_${role}.pdf`);
-    } catch (err) {
-      console.error("Failed to export PDF", err);
-    } finally {
-      setIsExporting(false);
-    }
-  };
+  const handleExportPdf = useReactToPrint({
+    contentRef: contentRef,
+    documentTitle: `Scorecard_${role.replace(/\s+/g, "_")}`,
+  });
 
   return (
-    <div id="scorecard-content" className="space-y-6 bg-hero pb-4 rounded-3xl">
+    <div ref={contentRef} className="space-y-6 bg-hero pb-4 rounded-3xl p-2">
       {/* header */}
       <div className="glass-strong flex flex-wrap items-center justify-between gap-4 rounded-3xl p-6 shadow-glow">
         <div>
@@ -519,12 +497,10 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis }: { role: string;
             <RefreshCw className="h-3.5 w-3.5" /> Re-analyze
           </button>
           <button 
-            onClick={handleExportPdf}
-            disabled={isExporting}
-            className="inline-flex items-center gap-1.5 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-primary-foreground shadow-glow disabled:opacity-70"
+            onClick={() => handleExportPdf()}
+            className="inline-flex items-center gap-1.5 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-primary-foreground shadow-glow"
           >
-            {isExporting ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Download className="h-3.5 w-3.5" />} 
-            {isExporting ? "Exporting..." : "Export PDF"}
+            <Download className="h-3.5 w-3.5" /> Export PDF
           </button>
         </div>
       </div>
@@ -533,14 +509,14 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis }: { role: string;
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="glass-strong rounded-3xl p-6 shadow-card lg:col-span-1">
           <div className="text-xs font-medium text-muted-foreground">Overall ATS score</div>
-          <div className="mt-3 flex items-center gap-6">
+          <div className="mt-4 flex items-center gap-4">
             <BigRing value={scorecard.match_percentage} />
-            <div>
-              <div className="text-4xl font-bold text-gradient">
-                {scorecard.match_percentage}<span className="text-xl">/100</span>
-              </div>
-              <div className="text-xs text-muted-foreground max-w-[200px]">{scorecard.overall_feedback}</div>
+            <div className="text-5xl font-extrabold text-gradient">
+              {scorecard.match_percentage}<span className="text-2xl text-muted-foreground/50">/100</span>
             </div>
+          </div>
+          <div className="mt-5 text-sm text-muted-foreground leading-relaxed">
+            {scorecard.overall_feedback}
           </div>
           <div className="mt-6 space-y-3">
             {Object.entries(scorecard.section_scores || {}).map(([key, data]: [string, any]) => (
@@ -567,17 +543,50 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis }: { role: string;
         <div className="glass-strong rounded-3xl p-6 shadow-card lg:col-span-2 flex flex-col">
           <div className="text-xs font-medium text-muted-foreground">Skill matches</div>
           <div className="mt-4 grid gap-6 md:grid-cols-2">
-            <SkillBlock
-              title="Matched skills"
-              matched={scorecard.matched_skills || []}
-              missing={[]}
-            />
-            <SkillBlock
-              title="Missing skills"
-              matched={[]}
-              missing={scorecard.missing_skills || []}
-              tone="accent"
-            />
+            <div>
+              <div className="text-sm font-semibold">Found in resume</div>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {(scorecard.matched_skills || []).map((s: string) => (
+                  <span key={s} className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary shadow-sm">
+                    {s}
+                  </span>
+                ))}
+                {(!scorecard.matched_skills || scorecard.matched_skills.length === 0) && (
+                  <span className="text-xs text-muted-foreground italic">None matched</span>
+                )}
+              </div>
+            </div>
+            <div>
+              <div className="text-sm font-semibold">Missing from resume</div>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {(scorecard.missing_skills || []).map((s: string) => (
+                  <span key={s} className="rounded-full border border-dashed border-destructive/40 bg-destructive/5 px-3 py-1 text-xs font-medium text-destructive shadow-sm">
+                    {s}
+                  </span>
+                ))}
+                {(!scorecard.missing_skills || scorecard.missing_skills.length === 0) && (
+                  <span className="text-xs text-muted-foreground italic">Nothing missing!</span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-8 pt-6 border-t border-border/50">
+            <div className="text-sm font-semibold">Skill Coverage Breakdown</div>
+            <div className="mt-4 flex h-3 w-full overflow-hidden rounded-full bg-secondary shadow-inner">
+              <div 
+                className="bg-brand transition-all duration-1000" 
+                style={{ width: `${((scorecard.matched_skills?.length || 0) / Math.max(1, (scorecard.matched_skills?.length || 0) + (scorecard.missing_skills?.length || 0))) * 100}%` }} 
+              />
+              <div 
+                className="bg-destructive/40 transition-all duration-1000" 
+                style={{ width: `${((scorecard.missing_skills?.length || 0) / Math.max(1, (scorecard.matched_skills?.length || 0) + (scorecard.missing_skills?.length || 0))) * 100}%` }} 
+              />
+            </div>
+            <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground font-medium">
+              <span className="flex items-center gap-2"><div className="h-2 w-2 rounded-full bg-brand" /> {scorecard.matched_skills?.length || 0} Matched</span>
+              <span className="flex items-center gap-2"><div className="h-2 w-2 rounded-full bg-destructive/40" /> {scorecard.missing_skills?.length || 0} Missing</span>
+            </div>
           </div>
 
           <div className="mt-auto pt-6">
@@ -743,52 +752,7 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis }: { role: string;
   );
 }
 
-function SkillBlock({
-  title,
-  matched,
-  missing,
-  tone = "primary",
-}: {
-  title: string;
-  matched: string[];
-  missing: string[];
-  tone?: "primary" | "accent";
-}) {
-  return (
-    <div>
-      <div className="text-xs font-medium text-muted-foreground">{title}</div>
-      <div className="mt-2 flex flex-wrap gap-1.5">
-        {matched.map((s) => (
-          <span
-            key={s}
-            className={
-              tone === "accent"
-                ? "rounded-full bg-accent/60 px-2.5 py-1 text-xs font-medium text-accent-foreground"
-                : "rounded-full bg-primary/10 px-2.5 py-1 text-xs font-medium text-primary"
-            }
-          >
-            {s}
-          </span>
-        ))}
-      </div>
-      {missing.length > 0 && (
-        <>
-          <div className="mt-3 text-xs font-medium text-muted-foreground">Missing from resume</div>
-          <div className="mt-2 flex flex-wrap gap-1.5">
-            {missing.map((s) => (
-              <span
-                key={s}
-                className="rounded-full border border-dashed border-destructive/40 bg-destructive/5 px-2.5 py-1 text-xs font-medium text-destructive"
-              >
-                {s}
-              </span>
-            ))}
-          </div>
-        </>
-      )}
-    </div>
-  );
-}
+
 
 function BigRing({ value }: { value: number }) {
   const r = 46;
