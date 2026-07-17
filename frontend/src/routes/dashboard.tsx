@@ -439,14 +439,14 @@ function LoadingCard() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="mx-auto max-w-xl glass-strong rounded-3xl p-10 text-center shadow-glow"
+      className="glass-strong rounded-[2rem] p-6 text-center shadow-glow md:p-10"
     >
       <div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-brand text-primary-foreground shadow-glow">
         <Loader2 className="h-7 w-7 animate-spin" />
       </div>
       <h3 className="mt-4 text-xl font-semibold">Analyzing your resume…</h3>
       <p className="mt-1 text-sm text-muted-foreground">This usually takes a few seconds.</p>
-      <ul className="mt-6 space-y-2 text-left text-sm">
+      <ul className="mx-auto mt-6 max-w-xl space-y-2 text-left text-sm">
         {steps.map((s, i) => (
           <motion.li
             key={s}
