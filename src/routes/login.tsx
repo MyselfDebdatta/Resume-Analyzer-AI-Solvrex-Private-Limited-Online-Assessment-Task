@@ -33,8 +33,16 @@ export function AuthShell({ mode }: { mode: "login" | "signup" }) {
   const [needsOtp, setNeedsOtp] = useState(false);
   const [otp, setOtp] = useState("");
 
+  const isFormValid = isLogin 
+    ? email.length > 0 && password.length > 0 
+    : email.length > 0 && password.length > 7 && name.length > 0;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isLogin && password.length < 8) {
+      setError("Password must be at least 8 characters long.");
+      return;
+    }
     setLoading(true);
     setError("");
 
@@ -44,7 +52,7 @@ export function AuthShell({ mode }: { mode: "login" | "signup" }) {
           email,
           password,
         });
-        if (signInError) throw new Error(signInError.message);
+        if (signInError) throw new Error(signInError.message || "Failed to sign in.");
         router.navigate({ to: "/" });
       } else {
         const { error: signUpError } = await authClient.signUp.email({
@@ -52,14 +60,17 @@ export function AuthShell({ mode }: { mode: "login" | "signup" }) {
           email,
           password,
         });
-        if (signUpError) throw new Error(signUpError.message);
+        if (signUpError) throw new Error(signUpError.message || "Failed to create account.");
         
         // Send OTP
         const { error: otpError } = await authClient.emailOtp.sendVerificationOtp({
           email,
           type: "email-verification",
         });
-        if (otpError) throw new Error(otpError.message);
+        if (otpError) {
+          // If Resend fails (e.g. unverified domain), we catch it here.
+          throw new Error("Account created, but failed to send OTP: " + (otpError.message || "Email provider error."));
+        }
         
         setNeedsOtp(true);
       }
@@ -72,6 +83,10 @@ export function AuthShell({ mode }: { mode: "login" | "signup" }) {
 
   const handleVerifyOtp = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (otp.length < 6) {
+      setError("OTP must be 6 digits.");
+      return;
+    }
     setLoading(true);
     setError("");
     try {
@@ -79,7 +94,7 @@ export function AuthShell({ mode }: { mode: "login" | "signup" }) {
         email,
         otp,
       });
-      if (verifyError) throw new Error(verifyError.message);
+      if (verifyError) throw new Error(verifyError.message || "Invalid OTP code.");
       router.navigate({ to: "/" });
     } catch (err: any) {
       setError(err.message || "Invalid OTP code.");
@@ -170,7 +185,7 @@ export function AuthShell({ mode }: { mode: "login" | "signup" }) {
                   />
 
                   <button 
-                    disabled={loading}
+                    disabled={loading || !isFormValid}
                     className="w-full rounded-full bg-brand py-3 text-sm font-semibold text-primary-foreground shadow-glow transition-transform hover:scale-[1.02] disabled:opacity-70 disabled:hover:scale-100"
                   >
                     {loading ? "Please wait..." : (isLogin ? "Log in" : "Create account")}
