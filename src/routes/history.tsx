@@ -55,7 +55,7 @@ function HistoryPage() {
             </p>
           </div>
           <Link
-            to="/analyze"
+            to="/dashboard"
             className="inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-glow"
           >
             <Sparkles className="h-4 w-4" /> New analysis
@@ -104,7 +104,7 @@ function HistoryPage() {
                   {it.delta}
                 </span>
                 <Link
-                  to="/analyze"
+                  to="/dashboard"
                   className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1.5 text-xs font-semibold hover:bg-secondary"
                 >
                   Open <ChevronRight className="h-3 w-3" />

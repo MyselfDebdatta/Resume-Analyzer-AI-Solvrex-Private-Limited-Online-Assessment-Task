@@ -1,5 +1,5 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   Upload,
@@ -15,80 +15,154 @@ import {
   Wand2,
   RefreshCw,
   Download,
+  LogOut,
+  Calendar,
+  Clock
 } from "lucide-react";
 import { SiteNav } from "@/components/site-nav";
 import { SiteFooter } from "@/components/site-footer";
+import { authClient } from "@/lib/auth-client";
 
-export const Route = createFileRoute("/analyze")({
+export const Route = createFileRoute("/dashboard")({
   head: () => ({
     meta: [
-      { title: "Analyze your resume — Resume Analyzer AI" },
+      { title: "Dashboard — Resume Analyzer AI" },
       {
         name: "description",
-        content:
-          "Upload your resume, paste a job description and target role, and get a detailed ATS scorecard.",
+        content: "Your private workspace to score resumes and view your history.",
       },
     ],
   }),
-  component: AnalyzePage,
+  component: DashboardPage,
 });
 
 type Phase = "form" | "loading" | "result";
 
-function AnalyzePage() {
+function DashboardPage() {
+  const router = useRouter();
+  const { data: sessionData, isPending } = authClient.useSession();
   const [phase, setPhase] = useState<Phase>("form");
   const [file, setFile] = useState<File | null>(null);
   const [jd, setJd] = useState("");
   const [role, setRole] = useState("");
   const [github, setGithub] = useState("");
 
+  useEffect(() => {
+    if (!isPending && !sessionData) {
+      router.navigate({ to: "/login" });
+    }
+  }, [isPending, sessionData, router]);
+
   const runAnalysis = () => {
     setPhase("loading");
     setTimeout(() => setPhase("result"), 2200);
   };
 
-  return (
-    <div className="min-h-screen bg-hero">
-      <SiteNav />
-      <main className="mx-auto max-w-6xl px-4 py-10 md:py-14">
-        <div className="mb-8 text-center">
-          <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
-            <Sparkles className="h-3.5 w-3.5" /> Resume Analyzer AI workspace
-          </span>
-          <h1 className="mt-3 text-4xl font-bold md:text-5xl">
-            Score your resume in <span className="text-gradient">under a minute</span>.
-          </h1>
-          <p className="mt-3 text-muted-foreground">Upload → paste JD → hit analyze. That's it.</p>
-        </div>
+  const handleLogout = async () => {
+    await authClient.signOut();
+    router.navigate({ to: "/" });
+  };
 
-        <AnimatePresence mode="wait">
-          {phase === "form" && (
-            <motion.div
-              key="form"
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-            >
-              <FormCard
-                file={file}
-                setFile={setFile}
-                jd={jd}
-                setJd={setJd}
-                role={role}
-                setRole={setRole}
-                github={github}
-                setGithub={setGithub}
-                onRun={runAnalysis}
-              />
-            </motion.div>
-          )}
-          {phase === "loading" && <LoadingCard key="loading" />}
-          {phase === "result" && (
-            <motion.div key="result" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-              <ResultView role={role || "Senior Data Analyst"} onReset={() => setPhase("form")} />
-            </motion.div>
-          )}
-        </AnimatePresence>
+  if (isPending || !sessionData) {
+    return (
+      <div className="min-h-screen bg-hero grid place-items-center">
+        <Loader2 className="h-8 w-8 animate-spin text-brand" />
+      </div>
+    );
+  }
+
+  const { user, session } = sessionData;
+
+  return (
+    <div className="min-h-screen bg-hero flex flex-col">
+      <SiteNav />
+      <main className="mx-auto w-full max-w-7xl px-4 py-8 flex-1">
+        <div className="grid gap-8 lg:grid-cols-4">
+          
+          {/* Sidebar / Profile Card */}
+          <div className="lg:col-span-1">
+            <div className="glass-strong rounded-3xl p-6 shadow-glow sticky top-24">
+              <div className="flex items-center gap-4">
+                <div className="grid h-12 w-12 place-items-center rounded-full bg-brand text-primary-foreground font-bold text-xl shadow-glow">
+                  {user.name.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <h2 className="font-bold">{user.name}</h2>
+                  <p className="text-xs text-muted-foreground truncate max-w-[150px]">{user.email}</p>
+                </div>
+              </div>
+
+              <div className="mt-8 space-y-4 text-sm">
+                <div className="flex items-center justify-between border-b border-border/50 pb-3">
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Calendar className="h-4 w-4" /> Account created
+                  </div>
+                  <div className="font-medium text-xs">
+                    {new Date(user.createdAt).toLocaleDateString()}
+                  </div>
+                </div>
+                <div className="flex items-center justify-between border-b border-border/50 pb-3">
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Clock className="h-4 w-4" /> Session started
+                  </div>
+                  <div className="font-medium text-xs">
+                    {new Date(session.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </div>
+                </div>
+              </div>
+
+              <button 
+                onClick={handleLogout}
+                className="mt-8 w-full flex items-center justify-center gap-2 rounded-xl bg-destructive/10 text-destructive py-2.5 font-semibold text-sm hover:bg-destructive/20 transition-colors"
+              >
+                <LogOut className="h-4 w-4" /> Log out
+              </button>
+            </div>
+          </div>
+
+          {/* Main Dashboard Area (Analyze Tool) */}
+          <div className="lg:col-span-3">
+            <div className="mb-8">
+              <span className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
+                <Sparkles className="h-3.5 w-3.5" /> Workspace
+              </span>
+              <h1 className="mt-3 text-3xl font-bold md:text-4xl">
+                Score your resume in <span className="text-gradient">under a minute</span>.
+              </h1>
+              <p className="mt-2 text-muted-foreground">Upload → paste JD → hit analyze. That's it.</p>
+            </div>
+
+            <AnimatePresence mode="wait">
+              {phase === "form" && (
+                <motion.div
+                  key="form"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                >
+                  <FormCard
+                    file={file}
+                    setFile={setFile}
+                    jd={jd}
+                    setJd={setJd}
+                    role={role}
+                    setRole={setRole}
+                    github={github}
+                    setGithub={setGithub}
+                    onRun={runAnalysis}
+                  />
+                </motion.div>
+              )}
+              {phase === "loading" && <LoadingCard key="loading" />}
+              {phase === "result" && (
+                <motion.div key="result" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+                  <ResultView role={role || "Senior Data Analyst"} onReset={() => setPhase("form")} />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+        </div>
       </main>
       <SiteFooter />
     </div>

@@ -53,7 +53,7 @@ export function AuthShell({ mode }: { mode: "login" | "signup" }) {
           password,
         });
         if (signInError) throw new Error(signInError.message || "Failed to sign in.");
-        router.navigate({ to: "/" });
+        router.navigate({ to: "/dashboard" });
       } else {
         const { error: signUpError } = await authClient.signUp.email({
           name,
@@ -95,7 +95,7 @@ export function AuthShell({ mode }: { mode: "login" | "signup" }) {
         otp,
       });
       if (verifyError) throw new Error(verifyError.message || "Invalid OTP code.");
-      router.navigate({ to: "/" });
+      router.navigate({ to: "/dashboard" });
     } catch (err: any) {
       setError(err.message || "Invalid OTP code.");
     } finally {
@@ -109,7 +109,7 @@ export function AuthShell({ mode }: { mode: "login" | "signup" }) {
       setLoading(true);
       const { error } = await authClient.signIn.social({
         provider,
-        callbackURL: "/",
+        callbackURL: "/dashboard",
       });
       if (error) throw new Error(error.message || `Failed to sign in with ${provider}.`);
     } catch (err: any) {

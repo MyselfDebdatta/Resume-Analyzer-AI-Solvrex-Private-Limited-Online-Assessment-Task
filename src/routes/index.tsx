@@ -85,7 +85,7 @@ function Hero() {
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Link
-              to="/analyze"
+              to="/dashboard"
               className="group inline-flex items-center gap-2 rounded-full bg-brand px-6 py-3 text-sm font-semibold text-primary-foreground shadow-glow transition-transform hover:scale-[1.04]"
             >
               Analyze my resume free
@@ -422,7 +422,7 @@ function ScorePreview() {
             </ul>
             <div className="mt-8">
               <Link
-                to="/analyze"
+                to="/dashboard"
                 className="inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-glow hover:scale-[1.03]"
               >
                 Try it with your resume <ChevronRight className="h-4 w-4" />
@@ -852,7 +852,7 @@ function FinalCTA() {
             </p>
             <div className="mt-8 flex flex-wrap justify-center gap-3">
               <Link
-                to="/analyze"
+                to="/dashboard"
                 className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-foreground shadow-soft hover:scale-[1.03] transition-transform"
               >
                 Start free analysis

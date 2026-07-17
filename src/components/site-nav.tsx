@@ -1,9 +1,12 @@
 import { Link } from "@tanstack/react-router";
-import { Rocket, Menu, X } from "lucide-react";
+import { Rocket, Menu, X, User } from "lucide-react";
 import { useState } from "react";
+import { authClient } from "@/lib/auth-client";
 
 export function SiteNav() {
   const [open, setOpen] = useState(false);
+  const { data: sessionData, isPending } = authClient.useSession();
+  
   return (
     <header className="sticky top-0 z-50 w-full pt-3">
       <div className="mx-auto max-w-6xl px-4">
@@ -43,18 +46,29 @@ export function SiteNav() {
           </div>
 
           <div className="hidden items-center gap-2 md:flex">
-            <Link
-              to="/login"
-              className="rounded-full px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary"
-            >
-              Log in
-            </Link>
-            <Link
-              to="/analyze"
-              className="rounded-full bg-brand px-4 py-2 text-sm font-semibold text-primary-foreground shadow-glow transition-transform hover:scale-[1.03]"
-            >
-              Analyze Resume
-            </Link>
+            {!isPending && sessionData ? (
+              <Link
+                to="/dashboard"
+                className="flex items-center gap-2 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-primary-foreground shadow-glow transition-transform hover:scale-[1.03]"
+              >
+                <User className="h-4 w-4" /> Your Profile
+              </Link>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  className="rounded-full px-4 py-2 text-sm font-medium text-foreground hover:bg-secondary"
+                >
+                  Log in
+                </Link>
+                <Link
+                  to="/login"
+                  className="rounded-full bg-brand px-4 py-2 text-sm font-semibold text-primary-foreground shadow-glow transition-transform hover:scale-[1.03]"
+                >
+                  Analyze Resume
+                </Link>
+              </>
+            )}
           </div>
 
           <button
@@ -96,20 +110,32 @@ export function SiteNav() {
             >
               History
             </Link>
-            <Link
-              to="/login"
-              onClick={() => setOpen(false)}
-              className="rounded-2xl px-3 py-2 text-sm"
-            >
-              Log in
-            </Link>
-            <Link
-              to="/analyze"
-              onClick={() => setOpen(false)}
-              className="rounded-2xl bg-brand px-3 py-2 text-center text-sm font-semibold text-primary-foreground"
-            >
-              Analyze Resume
-            </Link>
+            {!isPending && sessionData ? (
+              <Link
+                to="/dashboard"
+                onClick={() => setOpen(false)}
+                className="flex items-center justify-center gap-2 rounded-2xl bg-brand px-3 py-2 text-center text-sm font-semibold text-primary-foreground"
+              >
+                <User className="h-4 w-4" /> Your Profile
+              </Link>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  onClick={() => setOpen(false)}
+                  className="rounded-2xl px-3 py-2 text-sm"
+                >
+                  Log in
+                </Link>
+                <Link
+                  to="/login"
+                  onClick={() => setOpen(false)}
+                  className="rounded-2xl bg-brand px-3 py-2 text-center text-sm font-semibold text-primary-foreground"
+                >
+                  Analyze Resume
+                </Link>
+              </>
+            )}
           </div>
         )}
       </div>

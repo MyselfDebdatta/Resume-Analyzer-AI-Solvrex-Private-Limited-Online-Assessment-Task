@@ -43,7 +43,7 @@ export function SiteFooter() {
                 </a>
               </li>
               <li>
-                <Link to="/analyze" className="hover:text-foreground">
+                <Link to="/dashboard" className="hover:text-foreground">
                   Analyze
                 </Link>
               </li>
