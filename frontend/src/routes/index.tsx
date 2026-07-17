@@ -327,7 +327,7 @@ const features = [
   {
     icon: Briefcase,
     title: "Live Job Suggestions",
-    desc: "Every scorecard ends with real open roles from Adzuna — matched to your skills and target title.",
+    desc: "Every scorecard ends with real open roles matched to your skills and target title, powered by live LinkedIn search.",
     color: "from-brand-peach to-brand-pink",
   },
   {
@@ -505,7 +505,7 @@ function HowItWorks() {
     {
       icon: Briefcase,
       title: "Apply with matched jobs",
-      desc: "Curated open roles from Adzuna with salary, location and apply links.",
+      desc: "Curated open roles matched to your target role, with direct apply links to LinkedIn.",
     },
   ];
   return (
@@ -578,7 +578,7 @@ function DeepFeatures() {
               <span className="text-gradient">Zero context switch.</span>
             </>
           }
-          desc="Every analysis ends with matched open roles from the Adzuna Jobs API — filtered to your skills and target title, with salary, location and one-click apply."
+          desc="Every analysis ends with matched open roles powered by LinkedIn Job Search — dynamically generated for your skills and target title, with direct apply links."
           bullets={[
             "Skill-weighted match ranking",
             "Salary + location + freshness",
@@ -682,7 +682,7 @@ function JobsVisual() {
       <div className="glass-strong rounded-3xl p-6 shadow-glow">
         <div className="mb-4 flex items-center justify-between">
           <div className="text-sm font-semibold">Matched roles for you</div>
-          <span className="text-xs text-muted-foreground">via Adzuna</span>
+          <span className="text-xs text-muted-foreground">via LinkedIn</span>
         </div>
         <div className="space-y-3">
           {jobs.map((j) => (
