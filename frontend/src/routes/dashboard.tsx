@@ -1,27 +1,32 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import {
-  Upload,
-  FileText,
-  Sparkles,
-  Loader2,
-  ChevronRight,
-  CheckCircle2,
-  AlertTriangle,
-  Github,
-  Briefcase,
-  MapPin,
-  Wand2,
-  RefreshCw,
-  Download,
-  LogOut,
-  Calendar,
-  Clock,
+import { 
+  Upload, 
+  FileText, 
+  CheckCircle2, 
+  ChevronRight, 
+  File as FileIcon, 
+  X, 
+  Loader2, 
+  Sparkles, 
+  AlertCircle, 
+  RefreshCw, 
+  Download, 
+  Rocket, 
+  LogOut, 
+  FileCheck, 
+  Activity, 
+  Calendar, 
+  Clock, 
+  Home, 
+  Plus,
   ArrowLeft,
-  Activity,
-  FileCheck,
-  Rocket
+  Github,
+  AlertTriangle,
+  Wand2,
+  Briefcase,
+  MapPin
 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { getUserStatsFn, saveAnalysisFn } from "@/lib/server-fns";
@@ -288,6 +293,13 @@ function DashboardPage() {
                   <ResultView role={role} scorecard={scorecard} onReset={() => {
                     setPhase("form");
                     setScorecard(null);
+                  }} onNewAnalysis={() => {
+                    setPhase("form");
+                    setScorecard(null);
+                    setJd("");
+                    setRole("");
+                    setGithub("");
+                    setFile(null);
                   }} />
                 </motion.div>
               )}
@@ -432,7 +444,7 @@ function LoadingCard() {
   );
 }
 
-function ResultView({ role, scorecard, onReset }: { role: string; scorecard: any; onReset: () => void }) {
+function ResultView({ role, scorecard, onReset, onNewAnalysis }: { role: string; scorecard: any; onReset: () => void; onNewAnalysis: () => void }) {
   return (
     <div className="space-y-6">
       {/* header */}
@@ -444,6 +456,12 @@ function ResultView({ role, scorecard, onReset }: { role: string; scorecard: any
           </div>
         </div>
         <div className="flex gap-2">
+          <button
+            onClick={onNewAnalysis}
+            className="inline-flex items-center gap-1.5 rounded-full border border-brand/30 bg-brand/10 text-brand px-4 py-2 text-sm font-semibold hover:bg-brand hover:text-primary-foreground transition-all"
+          >
+            <Plus className="h-3.5 w-3.5" /> New analysis
+          </button>
           <button
             onClick={onReset}
             className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold hover:bg-secondary"
