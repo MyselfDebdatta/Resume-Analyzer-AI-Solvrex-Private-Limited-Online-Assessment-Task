@@ -1,12 +1,12 @@
 import { createServerFn } from "@tanstack/react-start";
-import { getWebRequest } from "@tanstack/react-start/server";
+import { getRequest } from "@tanstack/react-start/server";
 import { auth } from "./auth";
 import { prisma } from "./db";
 
 export const saveAnalysisFn = createServerFn({ method: "POST" })
   .validator((data: { role: string; matchPercentage: number; scorecard: any }) => data)
   .handler(async ({ data }) => {
-    const request = getWebRequest();
+    const request = getRequest();
     const sessionData = await auth.api.getSession({ headers: request.headers });
 
     if (!sessionData?.user) {
@@ -27,7 +27,7 @@ export const saveAnalysisFn = createServerFn({ method: "POST" })
 
 export const getUserStatsFn = createServerFn({ method: "GET" })
   .handler(async () => {
-    const request = getWebRequest();
+    const request = getRequest();
     const sessionData = await auth.api.getSession({ headers: request.headers });
 
     if (!sessionData?.user) {
@@ -41,7 +41,7 @@ export const getUserStatsFn = createServerFn({ method: "GET" })
 
     const count = analyses.length;
     const avgScore = count > 0
-      ? Math.round(analyses.reduce((acc, curr) => acc + curr.matchPercentage, 0) / count)
+      ? Math.round(analyses.reduce((acc: number, curr: any) => acc + curr.matchPercentage, 0) / count)
       : 0;
 
     return { count, avgScore };

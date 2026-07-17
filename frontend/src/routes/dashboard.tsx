@@ -86,9 +86,11 @@ function DashboardPage() {
       
       // Save analysis to the database
       await saveAnalysisFn({
-        role: role,
-        matchPercentage: data.data.match_percentage,
-        scorecard: data.data,
+        data: {
+          role: role,
+          matchPercentage: data.data.match_percentage,
+          scorecard: data.data,
+        }
       });
 
       // Refetch the dashboard stats
