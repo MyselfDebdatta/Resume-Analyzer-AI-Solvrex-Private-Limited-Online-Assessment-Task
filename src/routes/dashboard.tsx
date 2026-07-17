@@ -55,9 +55,36 @@ function DashboardPage() {
     }
   }, [isPending, sessionData, router]);
 
-  const runAnalysis = () => {
+  const [scorecard, setScorecard] = useState<any>(null);
+
+  const runAnalysis = async () => {
+    if (!file || !jd || !role) return;
     setPhase("loading");
-    setTimeout(() => setPhase("result"), 2200);
+    
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("jd", jd);
+      formData.append("role", role);
+      if (github) formData.append("github", github);
+      
+      const response = await fetch("http://localhost:8000/api/v1/analyze/", {
+        method: "POST",
+        body: formData,
+      });
+      
+      if (!response.ok) {
+        throw new Error("Analysis failed");
+      }
+      
+      const data = await response.json();
+      setScorecard(data.data);
+      setPhase("result");
+    } catch (error) {
+      console.error(error);
+      alert("Failed to analyze resume. Make sure the FastAPI backend is running on port 8000.");
+      setPhase("form");
+    }
   };
 
   const handleLogout = async () => {
@@ -198,9 +225,12 @@ function DashboardPage() {
                 </motion.div>
               )}
               {phase === "loading" && <LoadingCard key="loading" />}
-              {phase === "result" && (
+              {phase === "result" && scorecard && (
                 <motion.div key="result" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-                  <ResultView role={role || "Senior Data Analyst"} onReset={() => setPhase("form")} />
+                  <ResultView role={role} scorecard={scorecard} onReset={() => {
+                    setPhase("form");
+                    setScorecard(null);
+                  }} />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -344,7 +374,7 @@ function LoadingCard() {
   );
 }
 
-function ResultView({ role, onReset }: { role: string; onReset: () => void }) {
+function ResultView({ role, scorecard, onReset }: { role: string; scorecard: any; onReset: () => void }) {
   return (
     <div className="space-y-6">
       {/* header */}
@@ -373,28 +403,23 @@ function ResultView({ role, onReset }: { role: string; onReset: () => void }) {
         <div className="glass-strong rounded-3xl p-6 shadow-card lg:col-span-1">
           <div className="text-xs font-medium text-muted-foreground">Overall ATS score</div>
           <div className="mt-3 flex items-center gap-6">
-            <BigRing value={87} />
+            <BigRing value={scorecard.match_percentage} />
             <div>
               <div className="text-4xl font-bold text-gradient">
-                87<span className="text-xl">/100</span>
+                {scorecard.match_percentage}<span className="text-xl">/100</span>
               </div>
-              <div className="text-xs text-muted-foreground">Top 12% for this role</div>
+              <div className="text-xs text-muted-foreground max-w-[200px]">{scorecard.overall_feedback}</div>
             </div>
           </div>
           <div className="mt-6 space-y-3">
-            {[
-              { l: "Semantic similarity", v: 91 },
-              { l: "Keyword coverage", v: 82 },
-              { l: "Section quality", v: 88 },
-              { l: "Title alignment", v: 84 },
-            ].map((r) => (
-              <div key={r.l}>
-                <div className="flex justify-between text-xs">
-                  <span className="text-muted-foreground">{r.l}</span>
-                  <span className="font-semibold">{r.v}%</span>
+            {Object.entries(scorecard.section_scores || {}).map(([key, data]: [string, any]) => (
+              <div key={key}>
+                <div className="flex justify-between text-xs capitalize">
+                  <span className="text-muted-foreground">{key}</span>
+                  <span className="font-semibold">{data.score}%</span>
                 </div>
                 <div className="mt-1 h-2 rounded-full bg-secondary">
-                  <div className="h-2 rounded-full bg-brand" style={{ width: `${r.v}%` }} />
+                  <div className="h-2 rounded-full bg-brand" style={{ width: `${data.score}%` }} />
                 </div>
               </div>
             ))}
@@ -415,25 +440,14 @@ function ResultView({ role, onReset }: { role: string; onReset: () => void }) {
           </div>
           <div className="mt-4 grid gap-6 md:grid-cols-2">
             <SkillBlock
-              title="Hard skills"
-              matched={[
-                "Python",
-                "SQL",
-                "Pandas",
-                "NumPy",
-                "Tableau",
-                "AWS",
-                "Airflow",
-                "dbt",
-                "ETL",
-                "A/B testing",
-              ]}
-              missing={["Snowflake", "Spark", "Looker"]}
+              title="Matched skills"
+              matched={scorecard.matched_skills || []}
+              missing={[]}
             />
             <SkillBlock
-              title="Soft skills"
-              matched={["Collaboration", "Ownership", "Communication", "Mentorship"]}
-              missing={["Stakeholder management"]}
+              title="Missing skills"
+              matched={[]}
+              missing={scorecard.missing_skills || []}
               tone="accent"
             />
           </div>
@@ -443,54 +457,28 @@ function ResultView({ role, onReset }: { role: string; onReset: () => void }) {
       {/* sections + github */}
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="glass-strong rounded-3xl p-6 shadow-card lg:col-span-2">
-          <div className="text-sm font-semibold">Section quality</div>
+          <div className="text-sm font-semibold">Section feedback</div>
           <div className="mt-4 space-y-3">
-            {[
-              {
-                s: "Summary",
-                v: 68,
-                weak: true,
-                tip: 'Lead with a metric-driven sentence. Example: "Data analyst with 5y in fintech; cut reporting time 40%…"',
-              },
-              {
-                s: "Experience",
-                v: 92,
-                weak: false,
-                tip: "Strong quantification and impact — keep it up.",
-              },
-              {
-                s: "Skills",
-                v: 84,
-                weak: false,
-                tip: "Add Snowflake, Spark, Looker to close JD gaps.",
-              },
-              { s: "Education", v: 90, weak: false, tip: "Well-structured." },
-              {
-                s: "Projects",
-                v: 74,
-                weak: true,
-                tip: "Add one line describing outcome + tools per project.",
-              },
-            ].map((row) => (
-              <div key={row.s} className="rounded-2xl border border-border/60 p-4">
-                <div className="flex items-center justify-between">
+            {Object.entries(scorecard.section_scores || {}).map(([key, data]: [string, any]) => (
+              <div key={key} className="rounded-2xl border border-border/60 p-4">
+                <div className="flex items-center justify-between capitalize">
                   <div className="flex items-center gap-2 text-sm font-semibold">
-                    {row.weak ? (
+                    {data.score < 80 ? (
                       <AlertTriangle className="h-4 w-4 text-destructive" />
                     ) : (
                       <CheckCircle2 className="h-4 w-4 text-primary" />
                     )}
-                    {row.s}
+                    {key}
                   </div>
-                  <div className="text-xs font-semibold">{row.v}%</div>
+                  <div className="text-xs font-semibold">{data.score}%</div>
                 </div>
                 <div className="mt-2 h-1.5 rounded-full bg-secondary">
                   <div
-                    className={`h-1.5 rounded-full ${row.weak ? "bg-destructive/70" : "bg-brand"}`}
-                    style={{ width: `${row.v}%` }}
+                    className={`h-1.5 rounded-full ${data.score < 80 ? "bg-destructive/70" : "bg-brand"}`}
+                    style={{ width: `${data.score}%` }}
                   />
                 </div>
-                <div className="mt-2 text-xs text-muted-foreground">{row.tip}</div>
+                <div className="mt-2 text-xs text-muted-foreground">{data.feedback}</div>
               </div>
             ))}
           </div>
@@ -545,12 +533,7 @@ function ResultView({ role, onReset }: { role: string; onReset: () => void }) {
       <div className="glass-strong rounded-3xl p-6 shadow-card">
         <div className="text-sm font-semibold">Actionable suggestions</div>
         <div className="mt-4 grid gap-3 md:grid-cols-2">
-          {[
-            "Add Snowflake, Spark and Looker to your Skills section — all appear in the JD.",
-            "Rewrite the summary with a quantified opening line and mention fintech.",
-            "In Projects, add tools used + a one-line outcome per project.",
-            "Move certifications above education for tighter title alignment.",
-          ].map((t, i) => (
+          {(scorecard.actionable_suggestions || []).map((t: string, i: number) => (
             <div key={i} className="flex gap-3 rounded-2xl border border-border/60 bg-card p-4">
               <div className="grid h-8 w-8 flex-shrink-0 place-items-center rounded-xl bg-brand text-primary-foreground text-xs font-semibold">
                 {i + 1}
