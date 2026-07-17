@@ -68,6 +68,7 @@ function HistoryPage() {
       sessionStorage.setItem("analyzer_role", analysis.role);
       sessionStorage.setItem("analyzer_scorecard", JSON.stringify(analysis.scorecard));
       sessionStorage.setItem("analyzer_phase", "result");
+      sessionStorage.setItem("analyzer_id", id);
       
       router.navigate({ to: "/dashboard" });
     } catch (err) {

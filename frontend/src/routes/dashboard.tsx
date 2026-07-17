@@ -30,7 +30,7 @@ import {
   MapPin
 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
-import { getUserStatsFn, saveAnalysisFn } from "@/lib/server-fns";
+import { getUserStatsFn, saveAnalysisFn, updateAnalysisFn } from "@/lib/server-fns";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
@@ -76,10 +76,18 @@ function DashboardPage() {
     }
     return null;
   });
+  const [analysisId, setAnalysisId] = useState<string | null>(() => typeof window !== 'undefined' ? sessionStorage.getItem("analyzer_id") || null : null);
 
   useEffect(() => {
     if (typeof window !== 'undefined') sessionStorage.setItem("analyzer_phase", phase);
   }, [phase]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if (analysisId) sessionStorage.setItem("analyzer_id", analysisId);
+      else sessionStorage.removeItem("analyzer_id");
+    }
+  }, [analysisId]);
 
   useEffect(() => {
     globalFileCache = file;
@@ -143,14 +151,26 @@ function DashboardPage() {
       
       const data = await response.json();
       
-      // Save analysis to the database
-      await saveAnalysisFn({
-        data: {
-          role: role,
-          matchPercentage: data.data.match_percentage,
-          scorecard: data.data,
-        }
-      });
+      // Save analysis to history via server function
+      if (analysisId) {
+        await updateAnalysisFn({
+          data: {
+            id: analysisId,
+            role: role,
+            matchPercentage: data.data.match_percentage || 0,
+            scorecard: data.data
+          }
+        });
+      } else {
+        const saved = await saveAnalysisFn({
+          data: {
+            role: role,
+            matchPercentage: data.data.match_percentage || 0,
+            scorecard: data.data
+          }
+        });
+        setAnalysisId(saved.analysisId);
+      }
 
       // Refetch the dashboard stats
       await router.invalidate();
@@ -328,6 +348,7 @@ function DashboardPage() {
                     setRole("");
                     setGithub("");
                     setFile(null);
+                    setAnalysisId(null);
                   }} />
                 </motion.div>
               )}

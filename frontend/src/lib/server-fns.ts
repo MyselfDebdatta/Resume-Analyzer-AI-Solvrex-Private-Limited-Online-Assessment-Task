@@ -25,6 +25,34 @@ export const saveAnalysisFn = createServerFn({ method: "POST" })
     return { success: true, analysisId: analysis.id };
   });
 
+export const updateAnalysisFn = createServerFn({ method: "POST" })
+  .validator((data: { id: string; role: string; matchPercentage: number; scorecard: any }) => data)
+  .handler(async ({ data }) => {
+    const request = getRequest();
+    const sessionData = await auth.api.getSession({ headers: request.headers });
+
+    if (!sessionData?.user) {
+      throw new Error("Unauthorized");
+    }
+
+    // Verify ownership
+    const existing = await prisma.analysis.findUnique({ where: { id: data.id } });
+    if (!existing || existing.userId !== sessionData.user.id) {
+      throw new Error("Unauthorized");
+    }
+
+    const analysis = await prisma.analysis.update({
+      where: { id: data.id },
+      data: {
+        role: data.role,
+        matchPercentage: data.matchPercentage,
+        scorecard: data.scorecard,
+      },
+    });
+
+    return { success: true, analysisId: analysis.id };
+  });
+
 export const getUserStatsFn = createServerFn({ method: "GET" })
   .handler(async () => {
     const request = getRequest();
