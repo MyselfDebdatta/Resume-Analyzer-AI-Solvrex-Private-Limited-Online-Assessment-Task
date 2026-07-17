@@ -311,9 +311,16 @@ function DashboardPage() {
               {phase === "loading" && <LoadingCard key="loading" />}
               {phase === "result" && scorecard && (
                 <motion.div key="result" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
-                  <ResultView role={role} scorecard={scorecard} github={github} onReset={() => {
+                  <ResultView role={role} scorecard={scorecard} github={github} onEdit={() => {
                     setPhase("form");
                     setScorecard(null);
+                  }} onReset={() => {
+                    if (file) {
+                      runAnalysis();
+                    } else {
+                      alert("For your privacy, we don't store your resume files permanently. Please re-upload your resume to re-analyze.");
+                      setPhase("form");
+                    }
                   }} onNewAnalysis={() => {
                     setPhase("form");
                     setScorecard(null);
@@ -465,7 +472,7 @@ function LoadingCard() {
   );
 }
 
-function ResultView({ role, scorecard, onReset, onNewAnalysis, github }: { role: string; scorecard: any; onReset: () => void; onNewAnalysis: () => void; github: string }) {
+function ResultView({ role, scorecard, onReset, onNewAnalysis, onEdit, github }: { role: string; scorecard: any; onReset: () => void; onNewAnalysis: () => void; onEdit: () => void; github: string }) {
   const contentRef = useRef<HTMLDivElement>(null);
   const [ghData, setGhData] = useState<any>(null);
   const [ghEvents, setGhEvents] = useState<any[]>([]);
@@ -534,12 +541,18 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis, github }: { role:
             Your resume is a <span className="text-gradient">{scorecard.match_percentage >= 80 ? 'strong fit' : scorecard.match_percentage >= 60 ? 'moderate fit' : 'weak fit'}</span>.
           </div>
         </div>
-        <div data-html2canvas-ignore className="flex flex-wrap gap-2">
+        <div data-html2canvas-ignore className="flex flex-wrap items-center gap-3">
           <button
             onClick={onNewAnalysis}
-            className="inline-flex items-center gap-1.5 rounded-full border border-brand/30 bg-brand/10 text-brand px-4 py-2 text-sm font-semibold hover:bg-brand hover:text-primary-foreground transition-all"
+            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold hover:bg-secondary"
           >
             <Plus className="h-3.5 w-3.5" /> New analysis
+          </button>
+          <button
+            onClick={onEdit}
+            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold hover:bg-secondary"
+          >
+            <FileIcon className="h-3.5 w-3.5" /> Edit details
           </button>
           <button
             onClick={onReset}
