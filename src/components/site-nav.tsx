@@ -5,8 +5,8 @@ import { useState } from "react";
 export function SiteNav() {
   const [open, setOpen] = useState(false);
   return (
-    <header className="sticky top-0 z-50 w-full">
-      <div className="mx-auto mt-3 max-w-6xl px-4">
+    <header className="sticky top-0 z-50 w-full pt-3">
+      <div className="mx-auto max-w-6xl px-4">
         <nav className="glass-strong flex items-center justify-between rounded-full px-4 py-2.5 shadow-soft">
           <Link to="/" className="flex items-center gap-2 pl-2 font-display font-semibold">
             <span className="grid h-8 w-8 place-items-center rounded-xl bg-brand text-primary-foreground shadow-glow">
