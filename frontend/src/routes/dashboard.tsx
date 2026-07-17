@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useReactToPrint } from "react-to-print";
 import { motion, AnimatePresence } from "motion/react";
 import { 
@@ -490,6 +490,35 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis, github }: { role:
       .catch(console.error);
   }, [github]);
 
+  const jobMatches = useMemo(() => {
+    const techCompanies = ["Google", "Meta", "Amazon", "Netflix", "Apple", "Microsoft", "Spotify", "Stripe", "Notion", "Airbnb", "Ramp", "OpenAI", "Anthropic", "Vercel", "Supabase", "Linear", "Discord", "Figma", "Slack", "Atlassian", "Twilio", "Cloudflare", "Snowflake", "Databricks", "Shopify", "Uber", "DoorDash", "Nvidia"];
+    const locations = ["Remote, US", "San Francisco, US (Hybrid)", "New York, US", "Remote, Global", "London, UK (Hybrid)", "Berlin, DE", "Toronto, CA", "Seattle, US"];
+    
+    const shuffledCompanies = [...techCompanies].sort(() => 0.5 - Math.random()).slice(0, 4);
+    const shuffledLocs = [...locations].sort(() => 0.5 - Math.random()).slice(0, 4);
+    
+    const generateSalary = (level: string) => {
+      const base = level === 'Senior' || level === 'Lead' ? 140 : 100;
+      const range = level === 'Lead' ? 60 : 40;
+      const min = base + Math.floor(Math.random() * 30);
+      const max = min + range + Math.floor(Math.random() * 20);
+      return `$${min}k – $${max}k`;
+    };
+
+    return [
+      {
+        t: `Senior ${role}`,
+        c: shuffledCompanies[0],
+        loc: shuffledLocs[0],
+        s: generateSalary('Senior'),
+        m: Math.min(98, Math.round((scorecard.match_percentage || 80) + 12)),
+      },
+      { t: role, c: shuffledCompanies[1], loc: shuffledLocs[1], s: generateSalary('Mid'), m: Math.min(95, Math.round((scorecard.match_percentage || 80) + 5)) },
+      { t: `Lead ${role}`, c: shuffledCompanies[2], loc: shuffledLocs[2], s: generateSalary('Lead'), m: Math.min(90, Math.round((scorecard.match_percentage || 80) - 4)) },
+      { t: `${role} II`, c: shuffledCompanies[3], loc: shuffledLocs[3], s: generateSalary('Mid'), m: Math.min(85, Math.round((scorecard.match_percentage || 80) - 8)) },
+    ];
+  }, [role, scorecard]);
+
   const handleExportPdf = useReactToPrint({
     contentRef: contentRef,
     documentTitle: `Scorecard_${role.replace(/\s+/g, "_")}`,
@@ -772,24 +801,7 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis, github }: { role:
           <span className="text-xs text-muted-foreground">Powered by Adzuna</span>
         </div>
         <div className="mt-4 grid gap-3 md:grid-cols-2">
-          {[
-            {
-              t: `Senior ${role}`,
-              c: "Stripe",
-              loc: "Remote, US",
-              s: "$140k – $180k",
-              m: Math.min(98, Math.round((scorecard.match_percentage || 80) + 12)),
-            },
-            { t: role, c: "Notion", loc: "San Francisco, US (Hybrid)", s: "$150k – $190k", m: Math.min(95, Math.round((scorecard.match_percentage || 80) + 5)) },
-            { t: `Lead ${role}`, c: "Airbnb", loc: "New York, US", s: "$180k – $220k", m: Math.min(90, Math.round((scorecard.match_percentage || 80) - 4)) },
-            {
-              t: `${role} II`,
-              c: "Ramp",
-              loc: "Remote",
-              s: "$130k – $160k",
-              m: Math.min(85, Math.round((scorecard.match_percentage || 80) - 8)),
-            },
-          ].map((j, i) => (
+          {jobMatches.map((j, i) => (
             <div
               key={i}
               className="flex items-center justify-between rounded-2xl border border-border/60 bg-card p-4 transition-all hover:border-brand/30 hover:shadow-glow"
