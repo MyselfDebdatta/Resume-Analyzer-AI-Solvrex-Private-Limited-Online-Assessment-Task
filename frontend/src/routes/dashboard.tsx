@@ -77,6 +77,7 @@ function DashboardPage() {
     return null;
   });
   const [analysisId, setAnalysisId] = useState<string | null>(() => typeof window !== 'undefined' ? sessionStorage.getItem("analyzer_id") || null : null);
+  const [toast, setToast] = useState<string | null>(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined') sessionStorage.setItem("analyzer_phase", phase);
@@ -338,7 +339,8 @@ function DashboardPage() {
                     if (file) {
                       runAnalysis();
                     } else {
-                      alert("For your privacy, we don't store your resume files permanently. Please re-upload your resume to re-analyze.");
+                      setToast("For your privacy, we don't store your resume files permanently. Please re-upload your resume to re-analyze.");
+                      setTimeout(() => setToast(null), 5000);
                       setPhase("form");
                     }
                   }} onNewAnalysis={() => {
@@ -357,6 +359,24 @@ function DashboardPage() {
 
         </div>
       </main>
+
+      {/* Toast Notification */}
+      <AnimatePresence>
+        {toast && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            className="fixed bottom-6 right-6 z-50 flex max-w-sm items-start gap-3 rounded-2xl border border-border/50 bg-card p-4 shadow-glow"
+          >
+            <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-brand" />
+            <div className="text-sm font-medium leading-relaxed">{toast}</div>
+            <button onClick={() => setToast(null)} className="shrink-0 rounded-full p-1 text-muted-foreground hover:bg-secondary hover:text-foreground">
+              <X className="h-4 w-4" />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
