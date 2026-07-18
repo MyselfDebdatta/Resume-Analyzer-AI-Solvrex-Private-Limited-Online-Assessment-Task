@@ -1,24 +1,31 @@
+
 from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 from keybert import KeyBERT
 
-print("Loading NLP models (this takes a moment on startup)...")
-print("[DEBUG] Initializing Spacy...")
-import spacy
-nlp = spacy.load("en_core_web_md")
-print("[DEBUG] Spacy initialized successfully.")
+# Global variables for models (initially None)
+nlp = None
+embedder = None
+kw_model = None
 
-print("[DEBUG] Initializing SentenceTransformer...")
-embedder = SentenceTransformer('all-MiniLM-L6-v2')
-print("[DEBUG] SentenceTransformer initialized successfully.")
-
-print("[DEBUG] Initializing KeyBERT...")
-kw_model = KeyBERT(model=embedder)
-print("[DEBUG] KeyBERT initialized successfully.")
-print("NLP models loaded successfully!")
-
+def get_models():
+    """Lazy loads the models only when they are first needed."""
+    global nlp, embedder, kw_model
+    if embedder is None or kw_model is None:
+        print("[DEBUG] Lazy loading NLP models into memory...")
+        
+        print("[DEBUG] Initializing SentenceTransformer...")
+        embedder = SentenceTransformer('all-MiniLM-L6-v2')
+        
+        print("[DEBUG] Initializing KeyBERT...")
+        kw_model = KeyBERT(model=embedder)
+        
+        print("[DEBUG] All NLP models loaded successfully!")
+    
+    return None, embedder, kw_model
 def calculate_semantic_similarity(resume_text: str, jd_text: str) -> int:
     """Calculates semantic match percentage between Resume and JD."""
+    _, embedder, _ = get_models()
     # Truncate text to prevent memory issues with massive inputs
     resume_emb = embedder.encode(resume_text[:4000])
     jd_emb = embedder.encode(jd_text[:4000])
@@ -31,5 +38,6 @@ def calculate_semantic_similarity(resume_text: str, jd_text: str) -> int:
 
 def extract_keywords(text: str, top_n: int = 15) -> list[str]:
     """Extracts top keywords using KeyBERT."""
+    _, _, kw_model = get_models()
     keywords = kw_model.extract_keywords(text, keyphrase_ngram_range=(1, 2), stop_words='english', top_n=top_n)
     return [kw[0] for kw in keywords]

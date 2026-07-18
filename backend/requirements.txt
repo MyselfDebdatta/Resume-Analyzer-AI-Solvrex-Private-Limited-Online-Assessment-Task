@@ -3,7 +3,7 @@ uvicorn
 python-multipart
 pdfplumber
 python-docx
-spacy
+
 scikit-learn
 groq
 pydantic

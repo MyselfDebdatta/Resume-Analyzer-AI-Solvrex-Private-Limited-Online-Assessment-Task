@@ -4,8 +4,6 @@ set -e
 echo "Installing dependencies..."
 pip install -r requirements.txt
 
-echo "Downloading Spacy model..."
-python -m spacy download en_core_web_md
 
 echo "Pre-downloading Hugging Face AI models..."
 # This ensures the model is downloaded during the build phase, 
