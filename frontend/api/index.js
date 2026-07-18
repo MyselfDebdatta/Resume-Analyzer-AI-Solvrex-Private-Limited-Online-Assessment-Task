@@ -1,13 +1,4 @@
-import { ZodType } from 'zod';
 
-// Monkey patch Zod to add a dummy .meta() method for coerced booleans
-// This prevents a known bug in better-auth 1.6+ crashing on initialization
-if (!ZodType.prototype.meta) {
-  ZodType.prototype.meta = function (arg) {
-    this._meta = arg;
-    return this;
-  };
-}
 
 export default async function handler(req, res) {
   const { default: server } = await import('../dist/server/server.js');
