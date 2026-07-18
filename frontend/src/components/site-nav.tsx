@@ -37,12 +37,7 @@ export function SiteNav() {
             >
               FAQ
             </a>
-            <Link
-              to="/history"
-              className="rounded-full px-3 py-1.5 text-muted-foreground hover:text-foreground"
-            >
-              History
-            </Link>
+
           </div>
 
           <div className="hidden items-center gap-2 md:flex">
@@ -103,13 +98,7 @@ export function SiteNav() {
             >
               FAQ
             </a>
-            <Link
-              to="/history"
-              onClick={() => setOpen(false)}
-              className="rounded-2xl px-3 py-2 text-sm"
-            >
-              History
-            </Link>
+
             {!isPending && sessionData ? (
               <Link
                 to="/dashboard"

@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Rocket, Github, Twitter, Linkedin } from "lucide-react";
+import { Rocket, Github, Linkedin, Instagram, MessageCircle, Mail } from "lucide-react";
 
 export function SiteFooter() {
   return (
@@ -18,15 +18,21 @@ export function SiteFooter() {
               before you apply.
             </p>
             <div className="mt-4 flex gap-2">
-              {[Github, Twitter, Linkedin].map((Icon, i) => (
-                <a
-                  key={i}
-                  href="#"
-                  className="grid h-9 w-9 place-items-center rounded-full border border-border hover:bg-secondary"
-                >
-                  <Icon className="h-4 w-4" />
-                </a>
-              ))}
+              <a href="https://github.com/MyselfDebdatta" target="_blank" rel="noopener noreferrer" className="grid h-9 w-9 place-items-center rounded-full border border-border hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground" aria-label="GitHub">
+                <Github className="h-4 w-4" />
+              </a>
+              <a href="https://www.linkedin.com/in/debdatta-panda-dp11/" target="_blank" rel="noopener noreferrer" className="grid h-9 w-9 place-items-center rounded-full border border-border hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground" aria-label="LinkedIn">
+                <Linkedin className="h-4 w-4" />
+              </a>
+              <a href="https://wa.me/918637377080" target="_blank" rel="noopener noreferrer" className="grid h-9 w-9 place-items-center rounded-full border border-border hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground" aria-label="WhatsApp">
+                <MessageCircle className="h-4 w-4" />
+              </a>
+              <a href="https://www.instagram.com/itz__debdatta?igsh=MXRydjliNmdycDFrdg==" target="_blank" rel="noopener noreferrer" className="grid h-9 w-9 place-items-center rounded-full border border-border hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground" aria-label="Instagram">
+                <Instagram className="h-4 w-4" />
+              </a>
+              <a href="mailto:myselfDeb11@gmail.com" className="grid h-9 w-9 place-items-center rounded-full border border-border hover:bg-secondary transition-colors text-muted-foreground hover:text-foreground" aria-label="Email">
+                <Mail className="h-4 w-4" />
+              </a>
             </div>
           </div>
           <div>
@@ -47,11 +53,7 @@ export function SiteFooter() {
                   Analyze
                 </Link>
               </li>
-              <li>
-                <Link to="/history" className="hover:text-foreground">
-                  History
-                </Link>
-              </li>
+
             </ul>
           </div>
           <div>
