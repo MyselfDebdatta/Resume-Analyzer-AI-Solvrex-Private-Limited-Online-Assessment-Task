@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4F46E5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#9333EA;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="120" fill="url(#grad1)" />
+  
+  <!-- Document Base -->
+  <path d="M336 128H176C158.327 128 144 142.327 144 160V352C144 369.673 158.327 384 176 384H336C353.673 384 368 369.673 368 352V160C368 142.327 353.673 128 336 128Z" fill="white" />
+  
+  <!-- Lines -->
+  <rect x="192" y="192" width="128" height="16" rx="8" fill="#4F46E5" opacity="0.3" />
+  <rect x="192" y="240" width="128" height="16" rx="8" fill="#4F46E5" opacity="0.3" />
+  <rect x="192" y="288" width="80" height="16" rx="8" fill="#4F46E5" opacity="0.3" />
+  
+  <!-- AI Sparkles -->
+  <path d="M400 176C400 176 388 176 376 164C364 152 364 140 364 140C364 140 364 152 352 164C340 176 328 176 328 176C328 176 340 176 352 188C364 200 364 212 364 212C364 212 364 200 376 188C388 176 400 176 400 176Z" fill="#FBBF24" />
+  <path d="M432 248C432 248 426 248 420 242C414 236 414 230 414 230C414 230 414 236 408 242C402 248 396 248 396 248C396 248 402 248 408 254C414 260 414 266 414 266C414 266 414 260 420 254C426 248 432 248 432 248Z" fill="#FBBF24" />
+</svg>
