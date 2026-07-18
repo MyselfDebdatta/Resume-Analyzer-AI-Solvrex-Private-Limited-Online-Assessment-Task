@@ -586,7 +586,7 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis, onEdit, github }:
   });
 
   return (
-    <div ref={contentRef} className="space-y-6 bg-hero pb-4 rounded-3xl p-2">
+    <div ref={contentRef} className="space-y-6 bg-result-box pb-4 rounded-3xl p-2">
       {/* header */}
       <div className="glass-strong flex flex-wrap items-center justify-between gap-4 rounded-3xl p-6 shadow-card hover:shadow-hover transition-shadow duration-300">
         <div>
