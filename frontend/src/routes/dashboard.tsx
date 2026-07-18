@@ -28,7 +28,8 @@ import {
   Wand2,
   Briefcase,
   MapPin,
-  ExternalLink
+  ExternalLink,
+  XCircle
 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { getUserStatsFn, saveAnalysisFn, updateAnalysisFn } from "@/lib/server-fns";

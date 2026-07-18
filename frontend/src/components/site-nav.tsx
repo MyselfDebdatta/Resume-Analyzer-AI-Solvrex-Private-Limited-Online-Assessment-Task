@@ -38,6 +38,18 @@ export function SiteNav() {
               FAQ
             </a>
 
+            <a
+              href="/#nlp"
+              className="rounded-full px-3 py-1.5 text-muted-foreground hover:text-foreground"
+            >
+              NLP Pipeline
+            </a>
+            <a
+              href="/#matching"
+              className="rounded-full px-3 py-1.5 text-muted-foreground hover:text-foreground"
+            >
+              Job Matching
+            </a>
           </div>
 
           <div className="hidden items-center gap-2 md:flex">
@@ -97,6 +109,20 @@ export function SiteNav() {
               className="rounded-2xl px-3 py-2 text-sm"
             >
               FAQ
+            </a>
+            <a
+              href="/#nlp"
+              onClick={() => setOpen(false)}
+              className="rounded-2xl px-3 py-2 text-sm"
+            >
+              NLP Pipeline
+            </a>
+            <a
+              href="/#matching"
+              onClick={() => setOpen(false)}
+              className="rounded-2xl px-3 py-2 text-sm"
+            >
+              Job Matching
             </a>
 
             {!isPending && sessionData ? (
