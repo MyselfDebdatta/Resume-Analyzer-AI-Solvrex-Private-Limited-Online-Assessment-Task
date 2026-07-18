@@ -637,7 +637,22 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis, onEdit, github }:
             {scorecard.overall_feedback}
           </div>
           
-          {scorecard.resume_summary && (
+          {scorecard.resume_summary && Array.isArray(scorecard.resume_summary) && (
+            <div className="mt-6 rounded-2xl border border-border/60 p-4 bg-secondary/30">
+              <div className="text-xs font-semibold mb-3">Detailed Resume Summary</div>
+              <div className="space-y-4">
+                {scorecard.resume_summary.map((section: any, idx: number) => (
+                  <div key={idx}>
+                    <div className="text-xs font-semibold text-foreground/80">{section.section_name}</div>
+                    <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
+                      {section.content}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          {scorecard.resume_summary && typeof scorecard.resume_summary === 'string' && (
             <div className="mt-6 rounded-2xl border border-border/60 p-4 bg-secondary/30">
               <div className="text-xs font-semibold">Executive Summary</div>
               <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
