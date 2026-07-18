@@ -429,7 +429,7 @@ function FormCard(props: {
         <label className="group relative flex cursor-pointer flex-col items-center justify-center rounded-3xl border-2 border-dashed border-border bg-card/60 p-8 text-center transition-colors hover:border-primary/60 hover:bg-primary/5">
           <input
             type="file"
-            accept=".pdf,.doc,.docx"
+            accept=".pdf,.doc,.docx,.txt"
             className="hidden"
             onChange={(e) => setFile(e.target.files?.[0] ?? null)}
           />
@@ -440,7 +440,7 @@ function FormCard(props: {
           <div className="mt-1 text-xs text-muted-foreground">
             {file
               ? `${(file.size / 1024).toFixed(0)} KB · click to replace`
-              : "PDF or DOCX · max 10MB"}
+              : "PDF, DOCX, TXT · max 10MB"}
           </div>
         </label>
 
