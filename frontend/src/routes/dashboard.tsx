@@ -227,7 +227,7 @@ function DashboardPage() {
           
           {/* Enhanced Sidebar / Profile Card */}
           <div className="lg:col-span-1">
-            <div className="h-fit glass-strong rounded-3xl shadow-glow sticky top-24 overflow-hidden border border-border/50">
+            <div className="h-fit glass-strong rounded-3xl shadow-card hover:shadow-hover transition-shadow duration-300 sticky top-24 overflow-hidden border border-border/50">
               <div className="h-24 bg-gradient-to-br from-brand/80 via-purple-500/80 to-blue-500/80 relative">
                 <div className="absolute inset-0 bg-mesh opacity-50 mix-blend-overlay"></div>
               </div>
@@ -408,7 +408,7 @@ function FormCard(props: {
   const { file, setFile, jd, setJd, role, setRole, github, setGithub, onRun } = props;
   const canRun = !!file && jd.trim().length > 30 && role.trim().length > 1;
   return (
-    <div className="glass-strong rounded-[2rem] p-6 shadow-glow md:p-10">
+    <div className="glass-strong rounded-[2rem] p-6 shadow-card hover:shadow-hover transition-shadow duration-300 md:p-10">
       <div className="grid gap-6 md:grid-cols-2">
         {/* upload */}
         <label className="group relative flex cursor-pointer flex-col items-center justify-center rounded-3xl border-2 border-dashed border-border bg-card/60 p-8 text-center transition-colors hover:border-primary/60 hover:bg-primary/5">
@@ -501,7 +501,7 @@ function LoadingCard() {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="glass-strong rounded-[2rem] p-6 text-center shadow-glow md:p-10"
+      className="glass-strong rounded-[2rem] p-6 text-center shadow-card md:p-10"
     >
       <div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-brand text-primary-foreground shadow-glow">
         <Loader2 className="h-7 w-7 animate-spin" />
@@ -588,7 +588,7 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis, onEdit, github }:
   return (
     <div ref={contentRef} className="space-y-6 bg-hero pb-4 rounded-3xl p-2">
       {/* header */}
-      <div className="glass-strong flex flex-wrap items-center justify-between gap-4 rounded-3xl p-6 shadow-glow">
+      <div className="glass-strong flex flex-wrap items-center justify-between gap-4 rounded-3xl p-6 shadow-card hover:shadow-hover transition-shadow duration-300">
         <div>
           <div className="text-xs font-medium text-muted-foreground">Scorecard · {role}</div>
           <div className="mt-1 text-2xl font-bold">
@@ -625,7 +625,7 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis, onEdit, github }:
 
       {/* main grid */}
       <div className="grid gap-6 lg:grid-cols-3">
-        <div className="glass-strong rounded-3xl p-6 shadow-card lg:col-span-1">
+        <div className="glass-strong rounded-3xl p-6 shadow-card hover:shadow-hover transition-shadow duration-300 lg:col-span-1">
           <div className="text-xs font-medium text-muted-foreground">Overall ATS score</div>
           <div className="mt-4 flex items-center gap-4">
             <BigRing value={scorecard.match_percentage} />
@@ -683,7 +683,7 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis, onEdit, github }:
         </div>
 
         {/* skills */}
-        <div className="glass-strong rounded-3xl p-6 shadow-card lg:col-span-2 flex flex-col">
+        <div className="glass-strong rounded-3xl p-6 shadow-card hover:shadow-hover transition-shadow duration-300 lg:col-span-2 flex flex-col">
           <div className="text-xs font-medium text-muted-foreground">Skill matches</div>
           <div className="mt-4 grid gap-6 md:grid-cols-2">
             <div>
@@ -787,7 +787,7 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis, onEdit, github }:
 
       {/* sections + github */}
       <div className="grid gap-6 lg:grid-cols-3">
-        <div className="glass-strong rounded-3xl p-6 shadow-card lg:col-span-2">
+        <div className="glass-strong rounded-3xl p-6 shadow-card hover:shadow-hover transition-shadow duration-300 lg:col-span-2">
           <div className="text-sm font-semibold">Section feedback</div>
           <div className="mt-4 space-y-3">
             {Object.entries(scorecard.section_scores || {}).map(([key, data]: [string, any]) => (
@@ -815,7 +815,7 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis, onEdit, github }:
           </div>
         </div>
 
-        <div className="glass-strong rounded-3xl p-6 shadow-card flex flex-col">
+        <div className="glass-strong rounded-3xl p-6 shadow-card hover:shadow-hover transition-shadow duration-300 flex flex-col">
           <div className="flex items-center gap-2 text-sm font-semibold">
             <Github className="h-4 w-4" /> GitHub signal
           </div>
@@ -883,7 +883,7 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis, onEdit, github }:
       </div>
 
       {/* Suggestions */}
-      <div className="glass-strong rounded-3xl p-6 shadow-card">
+      <div className="glass-strong rounded-3xl p-6 shadow-card hover:shadow-hover transition-shadow duration-300">
         <div className="text-sm font-semibold">Actionable suggestions</div>
         <div className="mt-4 grid gap-3 md:grid-cols-2">
           {(scorecard.actionable_suggestions || []).map((t: string, i: number) => (
@@ -898,7 +898,7 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis, onEdit, github }:
       </div>
 
       {/* Job matches */}
-      <div className="glass-strong rounded-3xl p-6 shadow-card">
+      <div className="glass-strong rounded-3xl p-6 shadow-card hover:shadow-hover transition-shadow duration-300">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-sm font-semibold">
             <Briefcase className="h-4 w-4" /> Jobs matched to you
@@ -909,7 +909,7 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis, onEdit, github }:
           {jobMatches.map((j, i) => (
             <div
               key={i}
-              className="flex items-center justify-between rounded-2xl border border-border/60 bg-card p-4 transition-all hover:border-brand/30 hover:shadow-glow"
+              className="flex items-center justify-between rounded-2xl border border-border/60 bg-card p-4 transition-all hover:border-brand/30 hover:shadow-hover"
             >
               <div>
                 <div className="text-sm font-semibold">{j.t}</div>

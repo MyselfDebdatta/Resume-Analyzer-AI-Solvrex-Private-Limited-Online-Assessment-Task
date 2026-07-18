@@ -107,10 +107,11 @@
       oklch(0.93 0.08 30),
       oklch(0.88 0.1 258));
 
-  /* Shadows */
-  --shadow-glow: 0 15px 40px -15px oklch(0.7 0.18 300 / 0.10);
-  --shadow-soft: 0 10px 40px -12px oklch(0.6 0.1 280 / 0.12);
-  --shadow-card: 0 1px 2px oklch(0.6 0.1 280 / 0.06), 0 8px 24px -12px oklch(0.6 0.1 280 / 0.12);
+  /* Shadows - Clean UI without purple glow */
+  --shadow-glow: 0 4px 12px -2px rgba(0, 0, 0, 0.05);
+  --shadow-soft: 0 2px 8px -2px rgba(0, 0, 0, 0.04);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px -4px rgba(0, 0, 0, 0.04);
+  --shadow-hover: 0 12px 28px -6px rgba(0, 0, 0, 0.08);
 
   --sidebar: oklch(0.99 0.008 320);
   --sidebar-foreground: oklch(0.22 0.05 275);
@@ -142,6 +143,11 @@
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 12%);
   --ring: oklch(0.7 0.15 300);
+
+  --shadow-glow: 0 4px 12px -2px rgba(0, 0, 0, 0.3);
+  --shadow-soft: 0 2px 8px -2px rgba(0, 0, 0, 0.2);
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3), 0 4px 12px -4px rgba(0, 0, 0, 0.4);
+  --shadow-hover: 0 12px 28px -6px rgba(0, 0, 0, 0.5);
 }
 
 @layer base {
@@ -191,6 +197,9 @@
 }
 @utility shadow-card {
   box-shadow: var(--shadow-card);
+}
+@utility shadow-hover {
+  box-shadow: var(--shadow-hover);
 }
 @utility glass {
   background: color-mix(in oklab, white 70%, transparent);
