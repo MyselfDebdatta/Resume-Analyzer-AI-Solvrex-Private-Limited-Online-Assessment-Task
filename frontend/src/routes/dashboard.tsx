@@ -66,6 +66,7 @@ function DashboardPage() {
     }
     return "form";
   });
+  const [error, setError] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(globalFileCache);
   const [jd, setJd] = useState(() => typeof window !== 'undefined' ? sessionStorage.getItem("analyzer_jd") || "" : "");
   const [role, setRole] = useState(() => typeof window !== 'undefined' ? sessionStorage.getItem("analyzer_role") || "" : "");
@@ -133,6 +134,7 @@ function DashboardPage() {
 
   const runAnalysis = async () => {
     if (!file || !jd || !role) return;
+    setError(null);
     setPhase("loading");
     
     try {
@@ -142,7 +144,7 @@ function DashboardPage() {
       formData.append("role", role);
       if (github) formData.append("github", github);
       
-      const response = await fetch("http://localhost:8000/api/v1/analyze/", {
+      const response = await fetch("http://127.0.0.1:8000/api/v1/analyze/", {
         method: "POST",
         body: formData,
       });
@@ -179,9 +181,9 @@ function DashboardPage() {
 
       setScorecard(data.data);
       setPhase("result");
-    } catch (error) {
-      console.error(error);
-      alert("Failed to analyze resume. Make sure the FastAPI backend is running on port 8000.");
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || "Failed to analyze resume. Make sure the FastAPI backend is running on port 8000.");
       setPhase("form");
     }
   };
@@ -310,6 +312,17 @@ function DashboardPage() {
             </div>
 
             <AnimatePresence mode="wait">
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  className="mb-6 flex items-center gap-2 rounded-2xl border border-destructive/20 bg-destructive/10 p-4 text-sm font-medium text-destructive"
+                >
+                  <XCircle className="h-5 w-5 shrink-0" />
+                  {error}
+                </motion.div>
+              )}
               {phase === "form" && (
                 <motion.div
                   key="form"

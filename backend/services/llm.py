@@ -2,7 +2,7 @@ import json
 from groq import Groq
 from core.config import settings
 
-client = Groq(api_key=settings.GROQ_API_KEY)
+client = Groq(api_key=settings.GROQ_API_KEY, timeout=15.0)
 
 def generate_scorecard(resume_text: str, jd_text: str, role: str) -> dict:
     """Uses LLaMA 3 70b via Groq to deeply analyze the resume against the JD."""
@@ -92,6 +92,10 @@ def calculate_custom_score(llm_data: dict) -> dict:
     missing = llm_data.get("missing_skills", [])
     all_skills = llm_data.get("all_extracted_skills", [])
     summary_sections = llm_data.get("resume_summary", [])
+    if isinstance(summary_sections, list):
+        summary_sections = [s for s in summary_sections if isinstance(s, dict)]
+    else:
+        summary_sections = []
     
     # 1. Overall ATS Score Calculation
     
