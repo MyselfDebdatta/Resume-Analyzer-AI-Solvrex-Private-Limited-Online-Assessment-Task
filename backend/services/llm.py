@@ -20,7 +20,7 @@ def generate_scorecard(resume_text: str, jd_text: str, role: str) -> dict:
     Return a STRICT JSON object containing the exact following structure. Do not output any other markdown or text.
     {{
         "resume_summary": [
-            {{ "section_name": "(e.g., Professional Summary, Experience, Education, Skills, Key Achievements)", "content": "(A detailed summary of everything in this section. Ensure you explicitly include sections for Skills and Key Achievements if present.)" }}
+            {{ "section_name": "(e.g., Professional Summary, Experience, Education, Skills, Key Achievements)", "content": "(A detailed summary of everything in this section. For the Education section, you MUST explicitly include all grades, GPA, and percentages for intermediate, matriculation, and degrees. Ensure you explicitly include sections for Skills and Key Achievements if present.)" }}
         ],
         "overall_feedback": "(A brief, highly actionable 2-sentence summary of how well they fit)",
         "section_feedbacks": {{
@@ -31,7 +31,7 @@ def generate_scorecard(resume_text: str, jd_text: str, role: str) -> dict:
         }},
         "missing_skills": [ "(array of critical skills missing from resume. DO NOT include ANY skill that is already present in all_extracted_skills)" ],
         "matched_skills": [ "(array of skills present in both JD and resume)" ],
-        "all_extracted_skills": [ "(array of ALL notable technologies, languages, tools, frameworks, and soft skills found anywhere in the resume. You MUST extract skills mentioned in the Experience and Projects sections, not just the Skills section. DO NOT SKIP ANY.)" ],
+        "all_extracted_skills": [ "(array of ALL hard and soft skills, technologies, languages, tools, and frameworks found anywhere in the resume. There is NO LIMIT. You MUST extract every single skill mentioned in the tech stack, Experience, and Projects sections, not just the Skills section. DO NOT SKIP ANY.)" ],
         "actionable_suggestions": [
             "(Suggestion 1: What to add to skills)",
             "(Suggestion 2: How to improve experience bullet points)",
