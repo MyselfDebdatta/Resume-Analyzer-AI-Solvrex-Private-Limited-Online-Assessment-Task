@@ -20,7 +20,7 @@ def generate_scorecard(resume_text: str, jd_text: str, role: str) -> dict:
     Return a STRICT JSON object containing the exact following structure. Do not output any other markdown or text.
     {{
         "resume_summary": [
-            {{ "section_name": "(e.g., Professional Summary, Experience, Education, Projects)", "content": "(A detailed summary of everything in this section)" }}
+            {{ "section_name": "(e.g., Professional Summary, Experience, Education, Skills, Key Achievements)", "content": "(A detailed summary of everything in this section. Ensure you explicitly include sections for Skills and Key Achievements if present.)" }}
         ],
         "overall_feedback": "(A brief, highly actionable 2-sentence summary of how well they fit)",
         "section_feedbacks": {{
@@ -129,8 +129,7 @@ def calculate_custom_score(llm_data: dict) -> dict:
     section_feedbacks = llm_data.get("section_feedbacks", {})
     
     # Experience
-    exp_content = next((s.get("content", "") for s in summary_sections if "experience" in s.get("section_name", "").lower()), "")
-    exp_score = min(100, (len(exp_content) / 200) * 100) if has_experience else 0
+    exp_score = min(100, 50 + (depth_score * 1.5) + (skill_score * 0.5)) if has_experience else 0
     section_scores["experience"] = {
         "score": round(exp_score),
         "feedback": section_feedbacks.get("experience", "Add more quantifiable metrics to your experience.")
@@ -143,7 +142,7 @@ def calculate_custom_score(llm_data: dict) -> dict:
     }
     
     # Skills
-    skills_score = min(100, (len(all_skills) / 10) * 100)
+    skills_score = (len(matched) / total_jd_skills * 100) if total_jd_skills > 0 else (100 if has_skills else 0)
     section_scores["skills"] = {
         "score": round(skills_score),
         "feedback": section_feedbacks.get("skills", "Group your skills by category (e.g., Languages, Frameworks).")
@@ -151,8 +150,7 @@ def calculate_custom_score(llm_data: dict) -> dict:
     
     # Summary
     has_summary = any("summary" in name or "objective" in name or "profile" in name for name in section_names)
-    summary_content = next((s.get("content", "") for s in summary_sections if "summary" in s.get("section_name", "").lower()), "")
-    sum_score = min(100, (len(summary_content) / 100) * 100) if has_summary else 0
+    sum_score = min(100, 60 + (overall_score * 0.4)) if has_summary else 0
     section_scores["summary"] = {
         "score": round(sum_score),
         "feedback": section_feedbacks.get("summary", "Include a strong professional summary highlighting your top achievements.")
