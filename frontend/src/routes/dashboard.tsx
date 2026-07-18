@@ -791,7 +791,7 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis, onEdit, github }:
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="glass-strong rounded-3xl p-6 shadow-card hover:shadow-hover transition-shadow duration-300 lg:col-span-2">
           <div className="text-sm font-semibold">Section feedback</div>
-          <div className="mt-4 space-y-3">
+          <div className="mt-4 grid gap-4 sm:grid-cols-2">
             {Object.entries(scorecard.section_scores || {}).map(([key, data]: [string, any]) => (
               <div key={key} className="rounded-2xl border border-border/60 p-4">
                 <div className="flex items-center justify-between capitalize">
