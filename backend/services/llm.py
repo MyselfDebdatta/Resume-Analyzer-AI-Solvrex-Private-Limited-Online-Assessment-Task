@@ -29,8 +29,8 @@ def generate_scorecard(resume_text: str, jd_text: str, role: str) -> dict:
             "education": "(1 sentence actionable tip)",
             "skills": "(1 sentence actionable tip)"
         }},
-        "missing_skills": [ "(array of 3-5 critical hard skills missing from resume but present in JD)" ],
-        "matched_skills": [ "(array of 5-10 critical skills present in both)" ],
+        "missing_skills": [ "(array of critical skills missing from resume. DO NOT include ANY skill that is already present in all_extracted_skills)" ],
+        "matched_skills": [ "(array of skills present in both JD and resume)" ],
         "all_extracted_skills": [ "(array of ALL notable hard and soft skills found anywhere in the resume, no limit)" ],
         "actionable_suggestions": [
             "(Suggestion 1: What to add to skills)",
@@ -91,6 +91,30 @@ def calculate_custom_score(llm_data: dict) -> dict:
     matched = llm_data.get("matched_skills", [])
     missing = llm_data.get("missing_skills", [])
     all_skills = llm_data.get("all_extracted_skills", [])
+    
+    # 0. Anti-Hallucination Filter: Ensure no 'missing' skill is actually in the extracted skills
+    real_missing = []
+    all_skills_lower = [s.lower() for s in all_skills]
+    
+    for m in missing:
+        m_lower = m.lower()
+        is_actually_found = False
+        for ext in all_skills_lower:
+            if m_lower == ext or (len(ext) > 3 and ext in m_lower) or (len(m_lower) > 3 and m_lower in ext):
+                is_actually_found = True
+                break
+                
+        if is_actually_found:
+            # Move to matched if not already there
+            if not any(m.lower() == match.lower() for match in matched):
+                matched.append(m)
+        else:
+            real_missing.append(m)
+            
+    missing = real_missing
+    llm_data["missing_skills"] = missing
+    llm_data["matched_skills"] = matched
+    
     summary_sections = llm_data.get("resume_summary", [])
     if isinstance(summary_sections, list):
         summary_sections = [s for s in summary_sections if isinstance(s, dict)]
