@@ -1,7 +1,5 @@
 
-from sentence_transformers import SentenceTransformer
-from sklearn.metrics.pairwise import cosine_similarity
-from keybert import KeyBERT
+
 
 # Global variables for models (initially None)
 nlp = None
@@ -14,6 +12,10 @@ def get_models():
     if embedder is None or kw_model is None:
         print("[DEBUG] Lazy loading NLP models into memory...")
         
+        from sentence_transformers import SentenceTransformer
+        from sklearn.metrics.pairwise import cosine_similarity
+        from keybert import KeyBERT
+        
         print("[DEBUG] Initializing SentenceTransformer...")
         embedder = SentenceTransformer('all-MiniLM-L6-v2')
         
@@ -25,6 +27,8 @@ def get_models():
     return None, embedder, kw_model
 def calculate_semantic_similarity(resume_text: str, jd_text: str) -> int:
     """Calculates semantic match percentage between Resume and JD."""
+    from sklearn.metrics.pairwise import cosine_similarity
+    
     _, embedder, _ = get_models()
     # Truncate text to prevent memory issues with massive inputs
     resume_emb = embedder.encode(resume_text[:4000])
