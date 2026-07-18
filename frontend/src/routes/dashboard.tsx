@@ -636,6 +636,16 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis, onEdit, github }:
           <div className="mt-5 text-sm text-muted-foreground leading-relaxed">
             {scorecard.overall_feedback}
           </div>
+          
+          {scorecard.resume_summary && (
+            <div className="mt-6 rounded-2xl border border-border/60 p-4 bg-secondary/30">
+              <div className="text-xs font-semibold">Executive Summary</div>
+              <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+                {scorecard.resume_summary}
+              </p>
+            </div>
+          )}
+
           <div className="mt-6 space-y-3">
             {Object.entries(scorecard.section_scores || {}).map(([key, data]: [string, any]) => (
               <div key={key}>
@@ -662,7 +672,7 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis, onEdit, github }:
           <div className="text-xs font-medium text-muted-foreground">Skill matches</div>
           <div className="mt-4 grid gap-6 md:grid-cols-2">
             <div>
-              <div className="text-sm font-semibold">Found in resume</div>
+              <div className="text-sm font-semibold">Matched Skills (JD & Resume)</div>
               <div className="mt-3 flex flex-wrap gap-2">
                 {(scorecard.matched_skills || []).map((s: string) => (
                   <span key={s} className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary shadow-sm">
@@ -688,6 +698,19 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis, onEdit, github }:
               </div>
             </div>
           </div>
+          
+          {scorecard.all_extracted_skills && scorecard.all_extracted_skills.length > 0 && (
+            <div className="mt-6 border-t border-border/50 pt-6">
+              <div className="text-sm font-semibold">All Skills Extracted from Resume</div>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {scorecard.all_extracted_skills.map((s: string) => (
+                  <span key={s} className="rounded-full border border-border/60 bg-secondary/50 px-3 py-1 text-xs font-medium text-foreground shadow-sm">
+                    {s}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className="mt-8 pt-6 border-t border-border/50">
             <div className="text-sm font-semibold mb-6">Detailed Analytics</div>

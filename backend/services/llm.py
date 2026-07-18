@@ -19,6 +19,7 @@ def generate_scorecard(resume_text: str, jd_text: str, role: str) -> dict:
     
     Return a STRICT JSON object containing the exact following structure. Do not output any other markdown or text.
     {{
+        "resume_summary": "(A concise 2-3 sentence summary of the candidate's profile based entirely on the resume)",
         "match_percentage": (integer 0-100 based on fit),
         "overall_feedback": "(A brief, highly actionable 2-sentence summary of how well they fit)",
         "section_scores": {{
@@ -29,6 +30,7 @@ def generate_scorecard(resume_text: str, jd_text: str, role: str) -> dict:
         }},
         "missing_skills": [ "(array of 3-5 critical hard skills missing from resume but present in JD)" ],
         "matched_skills": [ "(array of 5-10 critical skills present in both)" ],
+        "all_extracted_skills": [ "(array of all notable hard and soft skills found in the resume, up to 15)" ],
         "actionable_suggestions": [
             "(Suggestion 1: What to add to skills)",
             "(Suggestion 2: How to improve experience bullet points)",
@@ -60,6 +62,7 @@ def generate_scorecard(resume_text: str, jd_text: str, role: str) -> dict:
         print(f"LLM API Error: {str(e)}")
         # Fallback empty structure
         return {
+            "resume_summary": "Analysis failed to generate a summary.",
             "match_percentage": 50,
             "overall_feedback": "Failed to generate AI analysis.",
             "section_scores": {
@@ -70,5 +73,6 @@ def generate_scorecard(resume_text: str, jd_text: str, role: str) -> dict:
             },
             "missing_skills": [],
             "matched_skills": [],
+            "all_extracted_skills": [],
             "actionable_suggestions": []
         }
