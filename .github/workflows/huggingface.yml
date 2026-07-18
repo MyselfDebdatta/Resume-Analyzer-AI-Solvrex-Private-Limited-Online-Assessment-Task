@@ -29,7 +29,7 @@ jobs:
           
           # Enter the backend directory and initialize a new git repository
           cd backend
-          git init
+          git init -b main
           git add .
           git commit -m "Auto-sync from GitHub Actions"
           
