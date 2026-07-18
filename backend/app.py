@@ -15,14 +15,14 @@ ensure_spacy()
 # Create a dummy GPU function to satisfy Hugging Face ZeroGPU hardware checks
 @spaces.GPU
 def dummy_gpu_function():
-    pass
+    return "Resume Analyzer AI Backend is running perfectly! Use the API endpoints."
 
 import gradio as gr
 from main import app as fastapi_app
 
 # Create a dummy Gradio interface to satisfy the Hugging Face Gradio SDK
 demo = gr.Interface(
-    fn=lambda: "Resume Analyzer AI Backend is running perfectly! Use the API endpoints.", 
+    fn=dummy_gpu_function, 
     inputs=None, 
     outputs="text",
     title="Resume Analyzer AI API"
