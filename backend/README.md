@@ -3,8 +3,8 @@ title: Resume Analyzer AI Backend
 emoji: 🚀
 colorFrom: blue
 colorTo: indigo
-sdk: gradio
-app_file: app.py
+sdk: docker
+
 pinned: false
 ---
 
