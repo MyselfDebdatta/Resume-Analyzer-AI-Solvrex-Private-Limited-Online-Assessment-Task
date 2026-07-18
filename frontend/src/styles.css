@@ -107,11 +107,12 @@
       oklch(0.93 0.08 30),
       oklch(0.88 0.1 258));
 
-  /* Shadows - Clean UI without purple glow */
+  /* Shadows - Clean static UI */
   --shadow-glow: 0 4px 12px -2px rgba(0, 0, 0, 0.05);
   --shadow-soft: 0 2px 8px -2px rgba(0, 0, 0, 0.04);
   --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px -4px rgba(0, 0, 0, 0.04);
-  --shadow-hover: 0 12px 28px -6px rgba(0, 0, 0, 0.08);
+  /* Pink/Blue theme border glow for hover states */
+  --shadow-hover: 0 0 0 1px oklch(0.78 0.14 350 / 0.6), 0 12px 30px -10px oklch(0.78 0.14 350 / 0.3), 0 20px 40px -15px oklch(0.68 0.17 258 / 0.2);
 
   --sidebar: oklch(0.99 0.008 320);
   --sidebar-foreground: oklch(0.22 0.05 275);
@@ -147,7 +148,7 @@
   --shadow-glow: 0 4px 12px -2px rgba(0, 0, 0, 0.3);
   --shadow-soft: 0 2px 8px -2px rgba(0, 0, 0, 0.2);
   --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3), 0 4px 12px -4px rgba(0, 0, 0, 0.4);
-  --shadow-hover: 0 12px 28px -6px rgba(0, 0, 0, 0.5);
+  --shadow-hover: 0 0 0 1px oklch(0.78 0.14 350 / 0.8), 0 12px 30px -10px oklch(0.78 0.14 350 / 0.4), 0 20px 40px -15px oklch(0.68 0.17 258 / 0.3);
 }
 
 @layer base {
