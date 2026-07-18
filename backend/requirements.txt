@@ -7,6 +7,4 @@ python-docx
 scikit-learn
 groq
 pydantic
-sentence-transformers
-keybert
 python-dotenv

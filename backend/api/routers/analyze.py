@@ -1,6 +1,6 @@
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException
 from services.document import extract_text_from_document
-from services.nlp import calculate_semantic_similarity, extract_keywords
+from services.nlp import *
 from services.llm import generate_scorecard
 
 router = APIRouter()
@@ -27,15 +27,10 @@ async def analyze_resume(
         if not resume_text or len(resume_text.strip()) < 50:
             raise HTTPException(status_code=400, detail="Could not extract enough text from the provided file.")
 
-        # 2. Advanced NLP Embeddings (Semantic Match)
-        semantic_score = calculate_semantic_similarity(resume_text, jd)
-        
-        # 3. LLM Deep Analysis (Groq LLaMA 3 70b)
+        # 2. LLM Deep Analysis (Groq LLaMA 3 70b)
+        # We rely 100% on the LLM to provide the match_percentage and analysis
+        # to prevent memory crashes (OOM) on free hosting tiers.
         scorecard = generate_scorecard(resume_text, jd, role)
-        
-        # Override the LLM's guessed match_percentage with our mathematically accurate semantic score
-        # But we blend them or use the LLM's component scores. We will use semantic_score as the main ATS score.
-        scorecard["match_percentage"] = semantic_score
         
         return {
             "status": "success",
