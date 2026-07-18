@@ -636,30 +636,7 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis, onEdit, github }:
           <div className="mt-5 text-sm text-muted-foreground leading-relaxed">
             {scorecard.overall_feedback}
           </div>
-          
-          {scorecard.resume_summary && Array.isArray(scorecard.resume_summary) && (
-            <div className="mt-6 rounded-2xl border border-border/60 p-4 bg-secondary/30">
-              <div className="text-xs font-semibold mb-3">Detailed Resume Summary</div>
-              <div className="space-y-4">
-                {scorecard.resume_summary.map((section: any, idx: number) => (
-                  <div key={idx}>
-                    <div className="text-xs font-semibold text-foreground/80">{section.section_name}</div>
-                    <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
-                      {section.content}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-          {scorecard.resume_summary && typeof scorecard.resume_summary === 'string' && (
-            <div className="mt-6 rounded-2xl border border-border/60 p-4 bg-secondary/30">
-              <div className="text-xs font-semibold">Executive Summary</div>
-              <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
-                {scorecard.resume_summary}
-              </p>
-            </div>
-          )}
+
 
           <div className="mt-6 space-y-3">
             {Object.entries(scorecard.section_scores || {}).map(([key, data]: [string, any]) => (
@@ -771,6 +748,30 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis, onEdit, github }:
               </div>
             </div>
           </div>
+
+          {scorecard.resume_summary && Array.isArray(scorecard.resume_summary) && (
+            <div className="mt-8 pt-6 border-t border-border/50">
+              <div className="text-sm font-semibold mb-4">Detailed Resume Summary</div>
+              <div className="space-y-5">
+                {scorecard.resume_summary.map((section: any, idx: number) => (
+                  <div key={idx}>
+                    <div className="text-sm font-semibold text-foreground">{section.section_name}</div>
+                    <p className="mt-1.5 text-sm text-muted-foreground leading-relaxed">
+                      {section.content}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          {scorecard.resume_summary && typeof scorecard.resume_summary === 'string' && (
+            <div className="mt-8 pt-6 border-t border-border/50">
+              <div className="text-sm font-semibold">Executive Summary</div>
+              <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+                {scorecard.resume_summary}
+              </p>
+            </div>
+          )}
 
           <div className="mt-auto pt-6">
             <div className="rounded-2xl bg-secondary/50 p-4 border border-border/50">
