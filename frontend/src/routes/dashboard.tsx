@@ -808,7 +808,7 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis, onEdit, github }:
           <div className="text-sm font-semibold mb-4">Section feedback</div>
           <div className="grid gap-4 sm:grid-cols-2 flex-1">
             {Object.entries(scorecard.section_scores || {}).map(([key, data]: [string, any]) => (
-              <div key={key} className="rounded-2xl border border-border/60 p-5 flex flex-col justify-center">
+              <div key={key} className="rounded-2xl border border-border/60 p-5 flex flex-col justify-center transition-all duration-300 hover:border-brand/40 hover:shadow-soft hover:bg-secondary/10">
                 <div className="flex items-center justify-between capitalize">
                   <div className="flex items-center gap-2 text-sm font-semibold">
                     {data.score < 80 ? (
