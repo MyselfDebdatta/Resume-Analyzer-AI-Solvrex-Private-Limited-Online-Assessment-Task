@@ -805,10 +805,10 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis, onEdit, github }:
       {/* sections + github */}
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="glass-strong rounded-3xl p-6 shadow-card hover:shadow-hover transition-shadow duration-300 lg:col-span-2 flex flex-col">
-          <div className="text-sm font-semibold">Section feedback</div>
-          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <div className="text-sm font-semibold mb-4">Section feedback</div>
+          <div className="grid gap-4 sm:grid-cols-2 flex-1">
             {Object.entries(scorecard.section_scores || {}).map(([key, data]: [string, any]) => (
-              <div key={key} className="rounded-2xl border border-border/60 p-4">
+              <div key={key} className="rounded-2xl border border-border/60 p-5 flex flex-col justify-center">
                 <div className="flex items-center justify-between capitalize">
                   <div className="flex items-center gap-2 text-sm font-semibold">
                     {data.score < 80 ? (
@@ -830,22 +830,6 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis, onEdit, github }:
               </div>
             ))}
           </div>
-          
-          {scorecard.actionable_suggestions?.length > 0 && (
-            <div className="mt-8 pt-6 border-t border-border/60 mt-auto">
-              <div className="text-sm font-semibold mb-4">Actionable suggestions</div>
-              <div className="grid gap-3 sm:grid-cols-2">
-                {(scorecard.actionable_suggestions || []).map((t: string, i: number) => (
-                  <div key={i} className="flex gap-3 rounded-2xl border border-border/60 bg-card p-4">
-                    <div className="grid h-8 w-8 flex-shrink-0 place-items-center rounded-xl bg-brand text-primary-foreground text-xs font-semibold">
-                      {i + 1}
-                    </div>
-                    <p className="text-sm">{t}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
 
         <div className="glass-strong rounded-3xl p-6 shadow-card hover:shadow-hover transition-shadow duration-300 flex flex-col">
@@ -922,7 +906,20 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis, onEdit, github }:
         </div>
       </div>
 
-
+      {/* Suggestions */}
+      <div className="glass-strong rounded-3xl p-6 shadow-card hover:shadow-hover transition-shadow duration-300">
+        <div className="text-sm font-semibold">Actionable suggestions</div>
+        <div className="mt-4 grid gap-3 md:grid-cols-2">
+          {(scorecard.actionable_suggestions || []).map((t: string, i: number) => (
+            <div key={i} className="flex gap-3 rounded-2xl border border-border/60 bg-card p-4">
+              <div className="grid h-8 w-8 flex-shrink-0 place-items-center rounded-xl bg-brand text-primary-foreground text-xs font-semibold">
+                {i + 1}
+              </div>
+              <p className="text-sm">{t}</p>
+            </div>
+          ))}
+        </div>
+      </div>
 
       {/* Job matches */}
       <div className="glass-strong rounded-3xl p-6 shadow-card hover:shadow-hover transition-shadow duration-300">
