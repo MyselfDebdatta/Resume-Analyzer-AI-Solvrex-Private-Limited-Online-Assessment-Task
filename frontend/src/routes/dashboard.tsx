@@ -872,9 +872,7 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis, onEdit, github }:
                 </div>
               )}
 
-              <div className="mt-auto pt-4 text-[10px] text-muted-foreground text-center">
-                Live metrics fetched directly from GitHub API.
-              </div>
+
             </div>
           ) : github ? (
             <div className="mt-4 text-xs text-muted-foreground">Loading GitHub profile...</div>
@@ -905,7 +903,7 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis, onEdit, github }:
           <div className="flex items-center gap-2 text-sm font-semibold">
             <Briefcase className="h-4 w-4" /> Jobs matched to you
           </div>
-          <span className="text-xs text-muted-foreground">Powered by Adzuna</span>
+
         </div>
         <div className="mt-4 grid gap-3 md:grid-cols-2">
           {jobMatches.map((j, i) => (
