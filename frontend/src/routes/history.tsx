@@ -82,10 +82,10 @@ function HistoryPage() {
   return (
     <div className="min-h-screen bg-hero flex flex-col">
       {/* App Header (Same as Dashboard) */}
-      <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
-        <div className="mx-auto max-w-7xl px-4">
-          <nav className="flex items-center justify-between py-3">
-            <div className="flex items-center gap-2 font-display font-semibold">
+      <header className="sticky top-0 z-50 w-full pt-3 px-4 pb-6 bg-gradient-to-b from-background via-background/90 to-transparent">
+        <div className="mx-auto max-w-7xl">
+          <nav className="glass-strong flex items-center justify-between rounded-full px-4 py-2.5 shadow-soft">
+            <div className="flex items-center gap-2 pl-2 font-display font-semibold">
               <span className="grid h-8 w-8 place-items-center rounded-xl bg-brand text-primary-foreground shadow-glow">
                 <Rocket className="h-4 w-4" />
               </span>
