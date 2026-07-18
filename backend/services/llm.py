@@ -153,20 +153,31 @@ def calculate_custom_score(llm_data: dict) -> dict:
     section_feedbacks = llm_data.get("section_feedbacks", {})
     
     # Experience
-    exp_score = min(100, 50 + (depth_score * 1.5) + (skill_score * 0.5)) if has_experience else 0
+    # Experience score heavily tied to matched keywords, max realistic score ~95
+    exp_score = min(95, 40 + (skill_ratio * 40) + (depth_score * 0.6)) if has_experience else 0
     section_scores["experience"] = {
         "score": round(exp_score),
         "feedback": section_feedbacks.get("experience", "Add more quantifiable metrics to your experience.")
     }
     
     # Education
+    edu_content = next((s.get("content", "").lower() for s in summary_sections if "education" in s.get("section_name", "").lower()), "")
+    edu_score = 0
+    if has_education:
+        edu_score = 70
+        if any(w in edu_content for w in ["bachelor", "b.s", "b.tech", "degree", "b.a", "bsc"]):
+            edu_score += 15
+        if any(w in edu_content for w in ["master", "m.s", "phd", "m.tech", "msc"]):
+            edu_score += 10
+        edu_score = min(96, edu_score)
+
     section_scores["education"] = {
-        "score": 100 if has_education else 0,
+        "score": round(edu_score),
         "feedback": section_feedbacks.get("education", "Ensure your degree and graduation date are clear.")
     }
     
     # Skills
-    skills_score = (len(matched) / total_jd_skills * 100) if total_jd_skills > 0 else (100 if has_skills else 0)
+    skills_score = min(98, (len(matched) / total_jd_skills * 100)) if total_jd_skills > 0 else (85 if has_skills else 0)
     section_scores["skills"] = {
         "score": round(skills_score),
         "feedback": section_feedbacks.get("skills", "Group your skills by category (e.g., Languages, Frameworks).")
@@ -174,7 +185,7 @@ def calculate_custom_score(llm_data: dict) -> dict:
     
     # Summary
     has_summary = any("summary" in name or "objective" in name or "profile" in name for name in section_names)
-    sum_score = min(100, 60 + (overall_score * 0.4)) if has_summary else 0
+    sum_score = min(92, 50 + (overall_score * 0.45)) if has_summary else 0
     section_scores["summary"] = {
         "score": round(sum_score),
         "feedback": section_feedbacks.get("summary", "Include a strong professional summary highlighting your top achievements.")
