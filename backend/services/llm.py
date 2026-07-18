@@ -31,7 +31,7 @@ def generate_scorecard(resume_text: str, jd_text: str, role: str) -> dict:
         }},
         "missing_skills": [ "(array of critical skills missing from resume. DO NOT include ANY skill that is already present in all_extracted_skills)" ],
         "matched_skills": [ "(array of skills present in both JD and resume)" ],
-        "all_extracted_skills": [ "(array of ALL notable hard and soft skills found anywhere in the resume, no limit)" ],
+        "all_extracted_skills": [ "(array of ALL notable technologies, languages, tools, frameworks, and soft skills found anywhere in the resume. You MUST extract skills mentioned in the Experience and Projects sections, not just the Skills section. DO NOT SKIP ANY.)" ],
         "actionable_suggestions": [
             "(Suggestion 1: What to add to skills)",
             "(Suggestion 2: How to improve experience bullet points)",
