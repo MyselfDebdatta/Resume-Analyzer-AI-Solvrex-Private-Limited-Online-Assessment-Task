@@ -911,7 +911,7 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis, onEdit, github }:
         <div className="text-sm font-semibold">Actionable suggestions</div>
         <div className="mt-4 grid gap-3 md:grid-cols-2">
           {(scorecard.actionable_suggestions || []).map((t: string, i: number) => (
-            <div key={i} className="flex gap-3 rounded-2xl border border-border/60 bg-card p-4">
+            <div key={i} className="flex gap-3 rounded-2xl border border-border/60 bg-card p-4 transition-all duration-300 hover:-translate-y-1 hover:border-brand/50 hover:shadow-hover hover:bg-secondary/30">
               <div className="grid h-8 w-8 flex-shrink-0 place-items-center rounded-xl bg-brand text-primary-foreground text-xs font-semibold">
                 {i + 1}
               </div>
