@@ -10,3 +10,4 @@ pydantic
 gradio
 sentence-transformers
 keybert
+python-dotenv
