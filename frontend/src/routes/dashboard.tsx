@@ -27,7 +27,8 @@ import {
   AlertTriangle,
   Wand2,
   Briefcase,
-  MapPin
+  MapPin,
+  ExternalLink
 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { getUserStatsFn, saveAnalysisFn, updateAnalysisFn } from "@/lib/server-fns";
@@ -872,7 +873,16 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis, onEdit, github }:
                 </div>
               )}
 
-
+              <div className="mt-auto pt-6">
+                <a
+                  href={`https://github.com/${github.split('/').filter(Boolean).pop()}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground shadow-glow transition-all hover:bg-primary/90 hover:shadow-hover"
+                >
+                  View Profile <ExternalLink className="h-3.5 w-3.5" />
+                </a>
+              </div>
             </div>
           ) : github ? (
             <div className="mt-4 text-xs text-muted-foreground">Loading GitHub profile...</div>
