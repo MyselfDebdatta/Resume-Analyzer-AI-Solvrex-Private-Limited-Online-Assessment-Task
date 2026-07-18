@@ -54,7 +54,7 @@ export function AuthShell({ mode }: { mode: "login" | "signup" }) {
           password,
         });
         if (signInError) throw new Error(signInError.message || "Failed to sign in.");
-        router.navigate({ to: "/dashboard" });
+        window.location.href = "/dashboard";
       } else {
         const { error: signUpError } = await authClient.signUp.email({
           name,
@@ -178,7 +178,7 @@ export function AuthShell({ mode }: { mode: "login" | "signup" }) {
                   Your email has been successfully verified.
                 </p>
                 <button
-                  onClick={() => router.navigate({ to: "/dashboard" })}
+                  onClick={() => window.location.href = "/dashboard"}
                   className="mt-8 w-full rounded-full bg-brand py-3 text-sm font-semibold text-primary-foreground shadow-glow transition-transform hover:scale-[1.02]"
                 >
                   Continue to Dashboard
