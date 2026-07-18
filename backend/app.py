@@ -1,3 +1,4 @@
+import spaces
 import os
 import subprocess
 
@@ -10,8 +11,6 @@ def ensure_spacy():
         subprocess.run(["python", "-m", "spacy", "download", "en_core_web_md"])
 
 ensure_spacy()
-
-import spaces
 
 # Create a dummy GPU function to satisfy Hugging Face ZeroGPU hardware checks
 @spaces.GPU
