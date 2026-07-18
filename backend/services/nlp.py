@@ -2,10 +2,19 @@ from sentence_transformers import SentenceTransformer
 from sklearn.metrics.pairwise import cosine_similarity
 from keybert import KeyBERT
 
-# Initialize models globally so they load into memory only once
 print("Loading NLP models (this takes a moment on startup)...")
+print("[DEBUG] Initializing Spacy...")
+import spacy
+nlp = spacy.load("en_core_web_md")
+print("[DEBUG] Spacy initialized successfully.")
+
+print("[DEBUG] Initializing SentenceTransformer...")
 embedder = SentenceTransformer('all-MiniLM-L6-v2')
+print("[DEBUG] SentenceTransformer initialized successfully.")
+
+print("[DEBUG] Initializing KeyBERT...")
 kw_model = KeyBERT(model=embedder)
+print("[DEBUG] KeyBERT initialized successfully.")
 print("NLP models loaded successfully!")
 
 def calculate_semantic_similarity(resume_text: str, jd_text: str) -> int:
