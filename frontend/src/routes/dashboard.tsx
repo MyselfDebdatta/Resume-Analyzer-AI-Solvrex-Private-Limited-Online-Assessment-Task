@@ -62,7 +62,7 @@ function DashboardPage() {
     if (typeof window !== 'undefined') {
       const p = sessionStorage.getItem("analyzer_phase");
       if (p === "result" || p === '"result"') return "result";
-      if (p === "loading" || p === '"loading"') return "loading";
+      // We NEVER restore "loading" because fetch requests die on page reload.
       return "form";
     }
     return "form";
@@ -190,6 +190,14 @@ function DashboardPage() {
   };
 
   const handleLogout = async () => {
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem("analyzer_phase");
+      sessionStorage.removeItem("analyzer_jd");
+      sessionStorage.removeItem("analyzer_role");
+      sessionStorage.removeItem("analyzer_github");
+      sessionStorage.removeItem("analyzer_scorecard");
+      sessionStorage.removeItem("analyzer_id");
+    }
     await authClient.signOut();
     router.navigate({ to: "/" });
   };
