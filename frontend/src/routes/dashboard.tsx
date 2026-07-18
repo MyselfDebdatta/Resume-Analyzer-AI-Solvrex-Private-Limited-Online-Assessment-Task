@@ -163,7 +163,7 @@ function DashboardPage() {
             id: analysisId,
             role: role,
             matchPercentage: data.data.match_percentage || 0,
-            scorecard: data.data
+            scorecard: { ...data.data, _input_jd: jd, _input_github: github }
           }
         });
       } else {
@@ -171,7 +171,7 @@ function DashboardPage() {
           data: {
             role: role,
             matchPercentage: data.data.match_percentage || 0,
-            scorecard: data.data
+            scorecard: { ...data.data, _input_jd: jd, _input_github: github }
           }
         });
         setAnalysisId(saved.analysisId);

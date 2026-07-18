@@ -92,6 +92,7 @@ export const getHistoryFn = createServerFn({ method: "GET" })
         role: true,
         matchPercentage: true,
         createdAt: true,
+        scorecard: true,
       },
     });
 

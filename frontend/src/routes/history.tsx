@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { Clock, Search, ChevronRight, Sparkles, Rocket, ArrowLeft, Home, LogOut, Calendar, Activity, FileCheck, Trash2, AlertTriangle } from "lucide-react";
+import { Clock, Search, ChevronRight, ChevronDown, Sparkles, Rocket, ArrowLeft, Home, LogOut, Calendar, Activity, FileCheck, Trash2, AlertTriangle, Github } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { getUserStatsFn, getHistoryFn, deleteAnalysisFn, clearHistoryFn, getAnalysisByIdFn } from "@/lib/server-fns";
 
@@ -34,6 +34,7 @@ function HistoryPage() {
   const [clearAllConfirm, setClearAllConfirm] = useState(false);
   const [confirmText, setConfirmText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isPending && !sessionData) {
@@ -221,40 +222,66 @@ function HistoryPage() {
               {filtered.map((it) => (
                 <div
                   key={it.id}
-                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-3xl border border-border/60 bg-card p-5 shadow-card hover:shadow-glow transition-all"
+                  className="flex flex-col gap-4 rounded-3xl border border-border/60 bg-card p-5 shadow-card hover:shadow-glow transition-all"
                 >
-                  <div className="flex items-center gap-4">
-                    <div className="grid h-12 w-12 flex-shrink-0 place-items-center rounded-2xl bg-brand text-lg font-bold text-primary-foreground shadow-glow">
-                      {it.matchPercentage}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div className="flex items-center gap-4">
+                      <div className="grid h-12 w-12 flex-shrink-0 place-items-center rounded-2xl bg-brand text-lg font-bold text-primary-foreground shadow-glow">
+                        {it.matchPercentage}
+                      </div>
+                      <div>
+                        <div className="text-sm font-semibold">
+                          {it.role}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {new Date(it.createdAt).toLocaleDateString(undefined, { 
+                            month: 'short', day: 'numeric', year: 'numeric', 
+                            hour: '2-digit', minute: '2-digit' 
+                          })}
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <div className="text-sm font-semibold">
-                        {it.role}
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        {new Date(it.createdAt).toLocaleDateString(undefined, { 
-                          month: 'short', day: 'numeric', year: 'numeric', 
-                          hour: '2-digit', minute: '2-digit' 
-                        })}
-                      </div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <button
+                        onClick={() => setExpandedId(expandedId === it.id ? null : it.id)}
+                        className="inline-flex flex-shrink-0 items-center gap-1 rounded-full border border-border px-3 py-2 text-xs font-semibold hover:bg-secondary transition-colors"
+                      >
+                        Details <ChevronDown className={`h-3 w-3 transition-transform ${expandedId === it.id ? "rotate-180" : ""}`} />
+                      </button>
+                      <button
+                        onClick={() => setDeleteConfirmId(it.id)}
+                        className="inline-flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
+                        title="Delete analysis"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                      <button
+                        onClick={() => handleOpenAnalysis(it.id)}
+                        disabled={isDeleting}
+                        className="inline-flex flex-shrink-0 items-center gap-1 rounded-full border border-brand/40 bg-brand/10 text-brand px-4 py-2 text-xs font-semibold hover:bg-brand hover:text-primary-foreground transition-colors disabled:opacity-50"
+                      >
+                        Open <ChevronRight className="h-3 w-3" />
+                      </button>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => setDeleteConfirmId(it.id)}
-                      className="inline-flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
-                      title="Delete analysis"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
-                    <button
-                      onClick={() => handleOpenAnalysis(it.id)}
-                      disabled={isDeleting}
-                      className="inline-flex flex-shrink-0 items-center gap-1 rounded-full border border-border px-4 py-2 text-xs font-semibold hover:bg-secondary transition-colors disabled:opacity-50"
-                    >
-                      Open Analysis <ChevronRight className="h-3 w-3" />
-                    </button>
-                  </div>
+
+                  {expandedId === it.id && (
+                    <div className="pt-4 mt-2 border-t border-border/50 text-sm">
+                      <div className="font-semibold mb-2">Job Description Used</div>
+                      <div className="max-h-48 overflow-y-auto rounded-xl bg-secondary/30 p-4 text-xs text-muted-foreground whitespace-pre-wrap border border-border/40">
+                        {(it as any).scorecard?._input_jd || "No Job Description saved for this analysis (older format)."}
+                      </div>
+                      
+                      {(it as any).scorecard?._input_github && (
+                        <div className="mt-4 flex items-center gap-2">
+                          <Github className="h-4 w-4" />
+                          <a href={`https://github.com/${(it as any).scorecard._input_github.split('/').filter(Boolean).pop()}`} target="_blank" rel="noopener noreferrer" className="text-xs font-semibold hover:underline text-brand">
+                            {(it as any).scorecard._input_github}
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               ))}
               {filtered.length === 0 && (
