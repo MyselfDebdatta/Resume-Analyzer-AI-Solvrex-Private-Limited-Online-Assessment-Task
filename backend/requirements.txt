@@ -11,3 +11,4 @@ gradio
 sentence-transformers
 keybert
 python-dotenv
+spaces

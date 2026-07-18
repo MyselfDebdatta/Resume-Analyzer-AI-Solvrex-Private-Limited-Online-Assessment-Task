@@ -11,6 +11,13 @@ def ensure_spacy():
 
 ensure_spacy()
 
+import spaces
+
+# Create a dummy GPU function to satisfy Hugging Face ZeroGPU hardware checks
+@spaces.GPU
+def dummy_gpu_function():
+    pass
+
 import gradio as gr
 from main import app as fastapi_app
 
