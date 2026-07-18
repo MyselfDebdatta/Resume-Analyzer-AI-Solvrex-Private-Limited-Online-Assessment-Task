@@ -53,16 +53,6 @@ export function SiteFooter() {
                   Analyze
                 </Link>
               </li>
-              <li>
-                <a href="/#nlp" className="hover:text-foreground">
-                  NLP Pipeline
-                </a>
-              </li>
-              <li>
-                <a href="/#matching" className="hover:text-foreground">
-                  Job Matching
-                </a>
-              </li>
             </ul>
           </div>
           <div>
