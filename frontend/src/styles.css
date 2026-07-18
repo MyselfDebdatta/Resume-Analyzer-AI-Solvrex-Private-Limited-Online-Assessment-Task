@@ -111,8 +111,8 @@
   --shadow-glow: 0 4px 12px -2px rgba(0, 0, 0, 0.05);
   --shadow-soft: 0 2px 8px -2px rgba(0, 0, 0, 0.04);
   --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px -4px rgba(0, 0, 0, 0.04);
-  /* Pink/Blue theme border glow for hover states */
-  --shadow-hover: 0 0 0 1px oklch(0.78 0.14 350 / 0.6), 0 12px 30px -10px oklch(0.78 0.14 350 / 0.3), 0 20px 40px -15px oklch(0.68 0.17 258 / 0.2);
+  /* Pink theme border glow for hover states */
+  --shadow-hover: 0 0 0 2px oklch(0.78 0.14 350 / 0.8), 0 0 15px 0px oklch(0.78 0.14 350 / 0.4), 0 8px 20px -6px rgba(0, 0, 0, 0.08);
 
   --sidebar: oklch(0.99 0.008 320);
   --sidebar-foreground: oklch(0.22 0.05 275);
@@ -148,7 +148,7 @@
   --shadow-glow: 0 4px 12px -2px rgba(0, 0, 0, 0.3);
   --shadow-soft: 0 2px 8px -2px rgba(0, 0, 0, 0.2);
   --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3), 0 4px 12px -4px rgba(0, 0, 0, 0.4);
-  --shadow-hover: 0 0 0 1px oklch(0.78 0.14 350 / 0.8), 0 12px 30px -10px oklch(0.78 0.14 350 / 0.4), 0 20px 40px -15px oklch(0.68 0.17 258 / 0.3);
+  --shadow-hover: 0 0 0 2px oklch(0.78 0.14 350 / 1), 0 0 15px 0px oklch(0.78 0.14 350 / 0.5), 0 8px 20px -6px rgba(0, 0, 0, 0.4);
 }
 
 @layer base {
