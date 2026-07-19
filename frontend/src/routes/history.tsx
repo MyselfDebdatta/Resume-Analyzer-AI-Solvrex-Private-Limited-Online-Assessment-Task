@@ -23,10 +23,25 @@ export const Route = createFileRoute("/history")({
   },
   pendingMs: 0,
   pendingComponent: () => (
-    <div className="min-h-screen bg-hero grid place-items-center">
-      <div className="flex flex-col items-center gap-4">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-brand border-r-transparent"></div>
-        <p className="text-sm font-medium text-muted-foreground animate-pulse">Loading your history...</p>
+    <div className="min-h-screen bg-hero grid place-items-center p-4">
+      <div className="glass-strong rounded-3xl p-10 flex flex-col items-center justify-center max-w-sm w-full shadow-glow text-center space-y-6 animate-in fade-in zoom-in duration-500">
+        <div className="relative">
+          <div className="absolute inset-0 bg-brand/20 blur-2xl rounded-full animate-pulse duration-1000" />
+          <div className="relative grid h-20 w-20 place-items-center rounded-full bg-gradient-to-br from-brand via-purple-500 to-blue-500 shadow-inner">
+            <Clock className="h-8 w-8 text-primary-foreground animate-pulse" />
+          </div>
+        </div>
+        <div className="space-y-2">
+          <h3 className="text-xl font-bold tracking-tight">Time Travel</h3>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            Retrieving your past scorecards from the secure vault...
+          </p>
+        </div>
+        <div className="flex gap-1.5 pt-2">
+          <div className="h-2 w-2 rounded-full bg-brand animate-bounce" style={{ animationDelay: "0ms" }} />
+          <div className="h-2 w-2 rounded-full bg-purple-500 animate-bounce" style={{ animationDelay: "150ms" }} />
+          <div className="h-2 w-2 rounded-full bg-blue-500 animate-bounce" style={{ animationDelay: "300ms" }} />
+        </div>
       </div>
     </div>
   ),
