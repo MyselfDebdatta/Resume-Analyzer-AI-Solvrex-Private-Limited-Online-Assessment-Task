@@ -205,7 +205,7 @@ export function AuthShell({ mode }: { mode: "login" | "signup" }) {
                   {!isLogin && (
                     <Field 
                       label="Full name" 
-                      placeholder="Alex Rivera" 
+                      placeholder="Debdatta Panda" 
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       required
