@@ -70,6 +70,7 @@ To ensure production stability while fulfilling the assessment criteria, I engin
 | **Export Tools** | html2canvas, jsPDF | Client-side rendering of the UI to generate downloadable PDF scorecards. |
 | **Backend API** | Python 3, FastAPI, Uvicorn | Asynchronous, non-blocking I/O API utilizing Pydantic for validation. |
 | **Database & ORM** | PostgreSQL (Supabase), Prisma ORM | Scalable cloud database via Supabase, strictly-typed with Prisma. |
+| **Containerization**| Docker, Docker Compose | Containerized local environment for isolated PostgreSQL database hosting. |
 | **AI & NLP** | Groq (LLaMA 3 70b), scikit-learn, sentence-transformers | Hybrid architecture: fully capable of Local Air-Gapped execution via `sentence-transformers` & `scikit-learn`, but forced to use Groq API for cloud deployment constraints. |
 | **Data Processing** | pdfplumber, python-docx, python-multipart | Spatial-aware PDF extraction and robust DOCX file parsing. |
 | **Deployment** | Vercel (Frontend), Render (Backend)| Edge Network hosting for React and scalable Cloud Web Service for Python. |
@@ -87,9 +88,9 @@ This platform was built using a cutting-edge, strictly typed, and highly asynchr
 
 ### 🛠️ Backend & AI Ecosystem (Python, PostgreSQL, Supabase)
 *   **Python 3, FastAPI & Uvicorn:** Selected over Django/Flask because FastAPI is built on Starlette and Pydantic. It allows for highly concurrent, asynchronous (`async/await`) non-blocking I/O processing, running seamlessly on the Uvicorn ASGI server.
-*   **AI & NLP (Local-First vs Groq API):** The core AI logic is built to be inherently **API-Agnostic**. The architecture supports full, local air-gapped processing using `scikit-learn` and local PyTorch `sentence-transformers` for strict enterprise privacy. However, to bypass the severe 512MB RAM limit of free-tier cloud deployment, the live deployed link is **forced** to utilize the Groq API (LLaMA 3 70b) as a fallback. It is critical to note that the application does *not* natively depend on cloud APIs to function if deployed on capable hardware.
+*   **AI & NLP (Local-First vs Groq API):** The core AI logic is built to be inherently **API-Agnostic**. The architecture supports full, local air-gapped processing using `scikit-learn` and local PyTorch `sentence-transformers` for strict enterprise privacy. However, to bypass the severe 512MB RAM limit of free-tier cloud deployment, the live deployed link is **forced** to utilize the Groq API (LLaMA 3 70b) as a fallback.
 *   **Data Processing (`pdfplumber` & `python-docx`):** Standard OCR tools often scramble text when encountering columns or tables. `pdfplumber` was specifically chosen for its spatial-awareness, preserving the hierarchical layout before semantic analysis. We also integrated `python-docx` and `python-multipart` to flawlessly handle native Word document uploads.
-*   **Supabase & Prisma ORM:** PostgreSQL is used to ensure robust ACID compliance when persisting user history, heavily utilizing **Supabase** as the scalable, managed database provider. Instead of traditional SQL drivers, the **Prisma ORM** is implemented to provide a strictly-typed, schema-driven interaction layer, ensuring seamless migrations and type-safe queries directly from the application layer.
+*   **Database & Containerization (Docker):** To ensure a perfectly isolated local development environment that mimics production, the local PostgreSQL database is containerized using **Docker**. A configured `docker-compose.yml` ensures developers can spin up a dedicated `postgres:15-alpine` instance (with persistent volume mounting) instantly. For cloud deployment, this transitions to the managed **Supabase** platform, connected seamlessly via the **Prisma ORM** for type-safe schema migrations.
 
 ---
 
@@ -168,6 +169,7 @@ Resume-Analyzer-AI/
 │
 ├── .gitignore                    # Environment variable and build artifact exclusions
 ├── render.yaml                   # Render Blueprint for automated backend deployment
+├── docker-compose.yml            # Docker containerization for local PostgreSQL database
 ├── README.md                     # Comprehensive project documentation
 ├── SECURITY.md                   # Enterprise security & data privacy policies
 └── CONTRIBUTING.md               # Guidelines for open-source contributions
@@ -177,21 +179,29 @@ Resume-Analyzer-AI/
 
 ## 💻 Local Setup (Development)
 
-To run the application locally on your machine:
+To run the application locally on your machine, you must utilize the containerized database alongside the dual-stack servers:
 
 ### Prerequisites
 - Node.js 18+
 - Python 3.10+
-- PostgreSQL Database
+- **Docker Desktop** (For running the local PostgreSQL container)
 
 ### Installation
+
 1. **Clone the Repository:**
    ```bash
    git clone <repository-url>
    cd "Resume Analyzer AI"
    ```
 
-2. **Backend Setup:**
+2. **Spin Up the Database (Docker):**
+   *Ensure Docker Desktop is running on your machine.*
+   ```bash
+   docker-compose up -d
+   ```
+   *This pulls the `postgres:15-alpine` image and hosts the database locally on port 5433.*
+
+3. **Backend Setup:**
    ```bash
    cd backend
    python -m venv venv
@@ -203,13 +213,15 @@ To run the application locally on your machine:
    uvicorn main:app --reload --port 8000
    ```
 
-3. **Frontend Setup:**
+4. **Frontend Setup & Prisma Migration:**
+   Open a new terminal window:
    ```bash
    cd frontend
    npm install
    ```
-   *Create a `.env` file in the frontend directory with your `VITE_API_URL`, database URL, and authentication keys.*
+   *Create a `.env` file in the frontend directory with your database connection string pointing to the running Docker container (`postgresql://root:rootpassword@localhost:5433/resumepilot`)*
    ```bash
+   npx prisma db push  # Push the schema to the Docker database
    npm run dev
    ```
 
