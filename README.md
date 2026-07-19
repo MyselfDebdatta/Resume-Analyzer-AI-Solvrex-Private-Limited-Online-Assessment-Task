@@ -68,10 +68,10 @@ To ensure production stability while fulfilling the assessment criteria, I engin
 | **Forms & Validation** | React Hook Form, Zod | Robust form state management with strict TypeScript schema validation. |
 | **Auth & Email** | Better-Auth, Resend, Nodemailer | Modern, headless secure authentication and transactional email delivery. |
 | **Export Tools** | html2canvas, jsPDF | Client-side rendering of the UI to generate downloadable PDF scorecards. |
-| **Backend API** | Python 3, FastAPI | Asynchronous, non-blocking I/O API to handle concurrent PDF processing. |
-| **Database & ORM** | PostgreSQL, Prisma ORM | ACID-compliant relational data persistence with a strictly-typed database schema. |
-| **AI & NLP** | Groq (LLaMA 3 70b) | Ultra-fast cloud inference for deterministic semantic analysis and JSON formatting. |
-| **Data Processing** | pdfplumber | Spatial-aware PDF text extraction that preserves layout hierarchy. |
+| **Backend API** | Python 3, FastAPI, Uvicorn | Asynchronous, non-blocking I/O API utilizing Pydantic for validation. |
+| **Database & ORM** | PostgreSQL (Supabase), Prisma ORM | Scalable cloud database via Supabase, strictly-typed with Prisma. |
+| **AI & NLP** | Groq (LLaMA 3 70b), scikit-learn, sentence-transformers | Hybrid architecture: fully capable of Local Air-Gapped execution via `sentence-transformers` & `scikit-learn`, but forced to use Groq API for cloud deployment constraints. |
+| **Data Processing** | pdfplumber, python-docx, python-multipart | Spatial-aware PDF extraction and robust DOCX file parsing. |
 | **Deployment** | Vercel (Frontend), Render (Backend)| Edge Network hosting for React and scalable Cloud Web Service for Python. |
 
 This platform was built using a cutting-edge, strictly typed, and highly asynchronous technology stack designed for enterprise scalability.
@@ -85,11 +85,11 @@ This platform was built using a cutting-edge, strictly typed, and highly asynchr
 *   **Forms & PDF Export:** `React Hook Form` handles complex form state without re-rendering the entire DOM. `html2canvas` and `jsPDF` are leveraged to render the HTML dashboard directly into a pixel-perfect, downloadable PDF report purely on the client side.
 *   **Authentication & Comms:** `Better-Auth` provides headless, secure session management and OAuth integrations, while `Resend` and `Nodemailer` handle robust transactional email delivery.
 
-### 🛠️ Backend & AI Ecosystem (Python & PostgreSQL)
-*   **Python 3 & FastAPI:** Selected over Django/Flask because FastAPI is built on Starlette and Pydantic. It allows for highly concurrent, asynchronous (`async/await`) non-blocking I/O processing.
-*   **Groq API (LLaMA 3 70b):** Groq runs on custom LPUs (Language Processing Units) rather than traditional GPUs, enabling the 70-billion parameter model to process massive resume tokens in under 2 seconds.
-*   **pdfplumber:** Standard OCR tools often scramble text when encountering columns or tables. `pdfplumber` was specifically chosen for its spatial-awareness, preserving the hierarchical layout before semantic analysis.
-*   **PostgreSQL & Prisma ORM:** PostgreSQL is used to ensure robust ACID compliance when persisting user history. Instead of traditional SQL drivers, the **Prisma ORM** is implemented to provide a strictly-typed, schema-driven interaction layer with the database, ensuring seamless migrations and type-safe queries directly from the application layer.
+### 🛠️ Backend & AI Ecosystem (Python, PostgreSQL, Supabase)
+*   **Python 3, FastAPI & Uvicorn:** Selected over Django/Flask because FastAPI is built on Starlette and Pydantic. It allows for highly concurrent, asynchronous (`async/await`) non-blocking I/O processing, running seamlessly on the Uvicorn ASGI server.
+*   **AI & NLP (Local-First vs Groq API):** The core AI logic is built to be inherently **API-Agnostic**. The architecture supports full, local air-gapped processing using `scikit-learn` and local PyTorch `sentence-transformers` for strict enterprise privacy. However, to bypass the severe 512MB RAM limit of free-tier cloud deployment, the live deployed link is **forced** to utilize the Groq API (LLaMA 3 70b) as a fallback. It is critical to note that the application does *not* natively depend on cloud APIs to function if deployed on capable hardware.
+*   **Data Processing (`pdfplumber` & `python-docx`):** Standard OCR tools often scramble text when encountering columns or tables. `pdfplumber` was specifically chosen for its spatial-awareness, preserving the hierarchical layout before semantic analysis. We also integrated `python-docx` and `python-multipart` to flawlessly handle native Word document uploads.
+*   **Supabase & Prisma ORM:** PostgreSQL is used to ensure robust ACID compliance when persisting user history, heavily utilizing **Supabase** as the scalable, managed database provider. Instead of traditional SQL drivers, the **Prisma ORM** is implemented to provide a strictly-typed, schema-driven interaction layer, ensuring seamless migrations and type-safe queries directly from the application layer.
 
 ---
 
