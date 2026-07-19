@@ -250,3 +250,6 @@ This project is licensed under the [MIT License](LICENSE). Copyright (c) 2026.
 
 ## 👨‍💻 Author
 Engineered with absolute dedication by **Debdatta Panda** for the **Solvrex Private Limited** Software Engineering Internship Assessment.
+
+*   **LinkedIn:** [Debdatta Panda](https://www.linkedin.com/in/debdatta-panda-dp11)
+*   **GitHub:** [@MyselfDebdatta](https://github.com/MyselfDebdatta)
