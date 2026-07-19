@@ -80,6 +80,19 @@ function HistoryPage() {
       sessionStorage.setItem("analyzer_phase", "result");
       sessionStorage.setItem("analyzer_id", id);
       
+      const scorecard = analysis.scorecard as any;
+      if (scorecard?._input_jd) {
+        sessionStorage.setItem("analyzer_jd", scorecard._input_jd);
+      } else {
+        sessionStorage.removeItem("analyzer_jd");
+      }
+      
+      if (scorecard?._input_github) {
+        sessionStorage.setItem("analyzer_github", scorecard._input_github);
+      } else {
+        sessionStorage.removeItem("analyzer_github");
+      }
+      
       router.navigate({ to: "/dashboard" });
     } catch (err) {
       console.error(err);
