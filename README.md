@@ -142,6 +142,39 @@ If this prototype were to be scaled into a commercial SaaS product for Enterpris
 
 ---
 
+## 📂 Project Repository Structure
+
+The repository is structured as a monorepo, cleanly separating the React frontend client from the Python FastAPI backend, ensuring isolated dependencies and deployment lifecycles.
+
+```text
+Resume-Analyzer-AI/
+├── frontend/                     # React.js & Vite Client
+│   ├── src/
+│   │   ├── components/           # Reusable Radix UI & Tailwind glassmorphic components
+│   │   ├── routes/               # TanStack Router page definitions (Dashboard, History)
+│   │   ├── lib/                  # Authentication clients (better-auth) and utilities
+│   │   ├── index.css             # Tailwind config and global .glass-strong styles
+│   │   └── main.tsx              # Application entry point
+│   ├── prisma/                   # Prisma ORM schema definitions for the frontend API
+│   ├── package.json              # Node.js dependencies
+│   └── tsconfig.json             # TypeScript strict configurations
+│
+├── backend/                      # Python FastAPI Server
+│   ├── api/                      # REST API endpoints (routers for parsing, scoring)
+│   ├── core/                     # Application configurations and Pydantic schemas
+│   ├── services/                 # NLP logic (Groq API integrations, pdfplumber)
+│   ├── main.py                   # FastAPI application entry point
+│   └── requirements.txt          # Python dependencies
+│
+├── .gitignore                    # Environment variable and build artifact exclusions
+├── render.yaml                   # Render Blueprint for automated backend deployment
+├── README.md                     # Comprehensive project documentation
+├── SECURITY.md                   # Enterprise security & data privacy policies
+└── CONTRIBUTING.md               # Guidelines for open-source contributions
+```
+
+---
+
 ## 💻 Local Setup (Development)
 
 To run the application locally on your machine:
