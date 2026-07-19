@@ -11,6 +11,10 @@
 ![Groq](https://img.shields.io/badge/Groq-%23F55036.svg?style=for-the-badge&logo=groq&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/postgresql-4169e1?style=for-the-badge&logo=postgresql&logoColor=white)
 ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
+![Vercel](https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white)
+![Framer](https://img.shields.io/badge/Framer-Black?style=for-the-badge&logo=framer&logoColor=blue)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 
@@ -23,17 +27,16 @@
 ---
 
 ## 📑 Table of Contents
-1. [Context & Authorship](#-context--authorship)
-2. [Executive Overview](#-executive-overview)
-3. [Architectural Paradigm](#-architectural-paradigm-the-hybrid-local-first-strategy)
-4. [The Processing Pipeline (Approach)](#-the-processing-pipeline-approach)
-5. [Scoring Methodology](#-scoring-methodology)
-6. [Assumptions Made](#-assumptions-made)
-7. [Future Improvements](#-future-improvements)
-8. [Deep Dive: The Tech Stack](#️-deep-dive-the-tech-stack)
-9. [Project Repository Structure](#-project-repository-structure)
-10. [Local Setup (Development)](#-local-setup-development)
-11. [License & Author](#-license)
+
+| **The Engineering & Logic** | **The Codebase & Infrastructure** |
+| :--- | :--- |
+| 🏢 [Context & Authorship](#-context--authorship) | ⚙️ [Deep Dive: The Tech Stack](#️-deep-dive-the-tech-stack) |
+| 🎯 [Executive Overview](#-executive-overview) | 📂 [Project Repository Structure](#-project-repository-structure) |
+| 🧠 [Architectural Paradigm](#-architectural-paradigm-the-hybrid-local-first-strategy) | 💻 [Local Setup (Development)](#-local-setup-development) |
+| 🚀 [The Processing Pipeline](#-the-processing-pipeline-approach) | 📜 [License & Author](#-license) |
+| 🧮 [Scoring Methodology](#-scoring-methodology) | |
+| 📌 [Assumptions Made](#-assumptions-made) | |
+| 🔮 [Future Improvements](#-future-improvements) | |
 
 ---
 
