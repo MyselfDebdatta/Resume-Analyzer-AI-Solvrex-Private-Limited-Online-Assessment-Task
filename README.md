@@ -59,6 +59,19 @@ To ensure production stability while fulfilling the assessment criteria, I engin
 
 ## ⚙️ Deep Dive: The Tech Stack
 
+| Category | Technology | Purpose |
+| :--- | :--- | :--- |
+| **Frontend & UI** | React.js (Vite), TypeScript | High-performance, strictly-typed client architecture. |
+| | Tailwind CSS | Custom bespoke `.glass-strong` Glassmorphism design system. |
+| | TanStack Router | Type-safe, instant client-side routing with `pendingComponent` animations. |
+| | Better-Auth | Modern, headless secure authentication and session management. |
+| **Backend API** | Python 3, FastAPI | Asynchronous, non-blocking I/O API to handle concurrent PDF processing. |
+| **Database** | PostgreSQL, SQLAlchemy | ACID-compliant relational data persistence for user history and credentials. |
+| **AI & NLP** | Groq (LLaMA 3 70b) | Ultra-fast cloud inference for deterministic semantic analysis and JSON formatting. |
+| | pdfplumber | Spatial-aware PDF text extraction that preserves layout hierarchy. |
+| **Deployment** | Vercel | Global Edge Network hosting for the blazing-fast React Frontend. |
+| | Render | Cloud Web Service hosting the FastAPI Python backend securely. |
+
 This platform was built using a cutting-edge, strictly typed, and highly asynchronous technology stack designed for enterprise scalability.
 
 ### 🎨 Frontend Ecosystem
