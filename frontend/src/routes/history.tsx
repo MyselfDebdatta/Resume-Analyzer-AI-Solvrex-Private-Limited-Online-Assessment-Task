@@ -21,6 +21,15 @@ export const Route = createFileRoute("/history")({
     ]);
     return { stats, history };
   },
+  pendingMs: 0,
+  pendingComponent: () => (
+    <div className="min-h-screen bg-hero grid place-items-center">
+      <div className="flex flex-col items-center gap-4">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-brand border-r-transparent"></div>
+        <p className="text-sm font-medium text-muted-foreground animate-pulse">Loading your history...</p>
+      </div>
+    </div>
+  ),
   component: HistoryPage,
 });
 
