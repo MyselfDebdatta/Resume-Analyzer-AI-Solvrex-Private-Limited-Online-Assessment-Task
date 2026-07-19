@@ -189,7 +189,7 @@ function HistoryPage() {
 
                 <button 
                   onClick={handleLogout}
-                  className="mt-3 w-full flex items-center justify-center gap-2 rounded-2xl border border-destructive/20 bg-destructive/5 text-destructive py-3 font-semibold text-sm hover:bg-destructive hover:text-destructive-foreground transition-all duration-200"
+                  className="mt-3 w-full flex items-center justify-center gap-2 rounded-2xl border border-destructive/20 bg-destructive/5 text-destructive py-3 font-semibold text-sm hover:bg-destructive hover:text-destructive-foreground transition-all duration-200 cursor-pointer"
                 >
                   <LogOut className="h-4 w-4" /> Secure Log out
                 </button>
@@ -216,7 +216,7 @@ function HistoryPage() {
                 {history.length > 0 && (
                   <button
                     onClick={() => setClearAllConfirm(true)}
-                    className="inline-flex items-center gap-2 rounded-full border border-destructive/20 bg-destructive/5 px-5 py-2.5 text-sm font-semibold text-destructive hover:bg-destructive hover:text-destructive-foreground transition-all"
+                    className="inline-flex items-center gap-2 rounded-full border border-destructive/20 bg-destructive/5 px-5 py-2.5 text-sm font-semibold text-destructive hover:bg-destructive hover:text-destructive-foreground transition-all cursor-pointer"
                   >
                     <Trash2 className="h-4 w-4" /> Clear History
                   </button>
@@ -266,13 +266,13 @@ function HistoryPage() {
                     <div className="flex flex-wrap items-center gap-2">
                       <button
                         onClick={() => setExpandedId(expandedId === it.id ? null : it.id)}
-                        className="inline-flex flex-shrink-0 items-center gap-1 rounded-full border border-border px-3 py-2 text-xs font-semibold hover:bg-secondary transition-colors"
+                        className="inline-flex flex-shrink-0 items-center gap-1 rounded-full border border-border px-3 py-2 text-xs font-semibold hover:bg-secondary transition-colors cursor-pointer"
                       >
                         Details <ChevronDown className={`h-3 w-3 transition-transform ${expandedId === it.id ? "rotate-180" : ""}`} />
                       </button>
                       <button
                         onClick={() => setDeleteConfirmId(it.id)}
-                        className="inline-flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
+                        className="inline-flex h-9 w-9 items-center justify-center rounded-full text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors cursor-pointer"
                         title="Delete analysis"
                       >
                         <Trash2 className="h-4 w-4" />
@@ -280,7 +280,7 @@ function HistoryPage() {
                       <button
                         onClick={() => handleOpenAnalysis(it.id)}
                         disabled={isDeleting}
-                        className="inline-flex flex-shrink-0 items-center gap-1 rounded-full border border-brand/40 bg-brand/10 text-brand px-4 py-2 text-xs font-semibold hover:bg-brand hover:text-primary-foreground transition-colors disabled:opacity-50"
+                        className="inline-flex flex-shrink-0 items-center gap-1 rounded-full border border-brand/40 bg-brand/10 text-brand px-4 py-2 text-xs font-semibold hover:bg-brand hover:text-primary-foreground transition-colors disabled:opacity-50 cursor-pointer"
                       >
                         Open <ChevronRight className="h-3 w-3" />
                       </button>

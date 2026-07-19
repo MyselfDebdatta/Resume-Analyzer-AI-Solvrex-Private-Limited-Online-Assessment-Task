@@ -300,7 +300,7 @@ function DashboardPage() {
 
                 <button 
                   onClick={handleLogout}
-                  className="mt-3 w-full flex items-center justify-center gap-2 rounded-2xl border border-destructive/20 bg-destructive/5 text-destructive py-3 font-semibold text-sm hover:bg-destructive hover:text-destructive-foreground transition-all duration-200"
+                  className="mt-3 w-full flex items-center justify-center gap-2 rounded-2xl border border-destructive/20 bg-destructive/5 text-destructive py-3 font-semibold text-sm hover:bg-destructive hover:text-destructive-foreground transition-all duration-200 cursor-pointer"
                 >
                   <LogOut className="h-4 w-4" /> Secure Log out
                 </button>
@@ -621,25 +621,25 @@ function ResultView({ role, scorecard, onReset, onNewAnalysis, onEdit, github }:
         <div data-html2canvas-ignore className="flex flex-wrap items-center gap-3">
           <button
             onClick={onNewAnalysis}
-            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold hover:bg-secondary"
+            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold hover:bg-secondary cursor-pointer"
           >
             <Plus className="h-3.5 w-3.5" /> New analysis
           </button>
           <button
             onClick={onEdit}
-            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold hover:bg-secondary"
+            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold hover:bg-secondary cursor-pointer"
           >
             <FileIcon className="h-3.5 w-3.5" /> Edit details
           </button>
           <button
             onClick={onReset}
-            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold hover:bg-secondary"
+            className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-4 py-2 text-sm font-semibold hover:bg-secondary cursor-pointer"
           >
             <RefreshCw className="h-3.5 w-3.5" /> Re-analyze
           </button>
           <button 
             onClick={() => handleExportPdf()}
-            className="inline-flex items-center gap-1.5 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-primary-foreground shadow-glow"
+            className="inline-flex items-center gap-1.5 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-primary-foreground shadow-glow cursor-pointer"
           >
             <Download className="h-3.5 w-3.5" /> Export PDF
           </button>
