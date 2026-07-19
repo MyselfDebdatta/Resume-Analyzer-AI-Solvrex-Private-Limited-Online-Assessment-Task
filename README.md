@@ -61,31 +61,35 @@ To ensure production stability while fulfilling the assessment criteria, I engin
 
 | Category | Technology | Purpose |
 | :--- | :--- | :--- |
-| **Frontend & UI** | React.js (Vite), TypeScript | High-performance, strictly-typed client architecture. |
-| | Tailwind CSS | Custom bespoke `.glass-strong` Glassmorphism design system. |
-| | TanStack Router | Type-safe, instant client-side routing with `pendingComponent` animations. |
-| | Better-Auth | Modern, headless secure authentication and session management. |
+| **Frontend Core** | React.js (Vite), TypeScript | High-performance, strictly-typed client architecture. |
+| **Routing & State** | TanStack Router & React Query | Type-safe client-side routing and asynchronous state management. |
+| **Styling & UI** | Tailwind CSS, Radix UI | Bespoke `.glass-strong` Glassmorphism design and accessible headless UI primitives. |
+| **Animations** | Framer Motion, tw-animate-css | Smooth layout transitions and complex micro-animations. |
+| **Forms & Validation** | React Hook Form, Zod | Robust form state management with strict TypeScript schema validation. |
+| **Auth & Email** | Better-Auth, Resend, Nodemailer | Modern, headless secure authentication and transactional email delivery. |
+| **Export Tools** | html2canvas, jsPDF | Client-side rendering of the UI to generate downloadable PDF scorecards. |
 | **Backend API** | Python 3, FastAPI | Asynchronous, non-blocking I/O API to handle concurrent PDF processing. |
-| **Database** | PostgreSQL, SQLAlchemy | ACID-compliant relational data persistence for user history and credentials. |
+| **Database & ORM** | PostgreSQL, Prisma ORM | ACID-compliant relational data persistence with a strictly-typed database schema. |
 | **AI & NLP** | Groq (LLaMA 3 70b) | Ultra-fast cloud inference for deterministic semantic analysis and JSON formatting. |
-| | pdfplumber | Spatial-aware PDF text extraction that preserves layout hierarchy. |
-| **Deployment** | Vercel | Global Edge Network hosting for the blazing-fast React Frontend. |
-| | Render | Cloud Web Service hosting the FastAPI Python backend securely. |
+| **Data Processing** | pdfplumber | Spatial-aware PDF text extraction that preserves layout hierarchy. |
+| **Deployment** | Vercel (Frontend), Render (Backend)| Edge Network hosting for React and scalable Cloud Web Service for Python. |
 
 This platform was built using a cutting-edge, strictly typed, and highly asynchronous technology stack designed for enterprise scalability.
 
-### 🎨 Frontend Ecosystem
-*   **React.js & Vite:** Chosen for blazing-fast Hot Module Replacement (HMR) during development and highly optimized, minified production builds. The component-driven architecture allows for massive reusability.
-*   **TypeScript:** Implemented end-to-end to enforce strict type safety. This is absolutely critical when handling highly nested, deeply complex JSON payloads returned by the AI, completely eliminating unpredictable runtime errors (`undefined is not a function`).
-*   **Tailwind CSS (Custom Configuration):** Gone are the days of generic Bootstrap themes. I heavily customized the Tailwind configuration to build a bespoke **"Glassmorphism" design system** (`.glass-strong`). It features deep background blurs, ambient radial gradients, glowing drop-shadows, and micro-interactions (like `hover:-translate-y-1`) that make the application feel like a premium, native desktop application.
-*   **TanStack Router:** Replaced traditional React Router for its powerful, type-safe routing. I engineered custom `pendingComponent` states with `pendingMs: 0` to provide buttery-smooth, instant visual feedback (custom loading screens) when fetching data from the database, eliminating UI freezing during network latency.
-*   **Better-Auth:** A modern, headless authentication library handling secure session management, automatic token rotation, and robust OAuth/Email credential verification.
+### 🎨 Frontend Ecosystem (React & TypeScript)
+*   **React.js & Vite:** Chosen for blazing-fast Hot Module Replacement (HMR) during development and highly optimized, minified production builds.
+*   **TypeScript & Zod:** Implemented end-to-end to enforce strict type safety. Zod is used for runtime schema validation, which is absolutely critical when handling highly nested JSON payloads returned by the AI, completely eliminating unpredictable runtime errors.
+*   **Tailwind CSS & Radix UI:** Gone are the days of generic Bootstrap themes. I combined heavily customized Tailwind configurations with Radix UI's accessible, headless primitives to build a bespoke **"Glassmorphism" design system**.
+*   **Framer Motion:** Utilized to orchestrate fluid layout transitions, stagger animations for the scorecard elements, and provide a premium "app-like" feel.
+*   **TanStack Ecosystem (Router & Query):** Replaced traditional routing and fetching mechanisms. `TanStack Router` provides type-safe, instant client-side routing with custom `pendingComponent` states. `TanStack Query` handles asynchronous data fetching, aggressive caching, and background synchronization.
+*   **Forms & PDF Export:** `React Hook Form` handles complex form state without re-rendering the entire DOM. `html2canvas` and `jsPDF` are leveraged to render the HTML dashboard directly into a pixel-perfect, downloadable PDF report purely on the client side.
+*   **Authentication & Comms:** `Better-Auth` provides headless, secure session management and OAuth integrations, while `Resend` and `Nodemailer` handle robust transactional email delivery.
 
-### 🛠️ Backend & AI Ecosystem
-*   **Python 3 & FastAPI:** Selected over Django/Flask because FastAPI is built on Starlette and Pydantic. It allows for highly concurrent, asynchronous (`async/await`) non-blocking I/O processing, meaning the server can effortlessly handle dozens of massive PDF uploads simultaneously without bottlenecking.
-*   **Groq API (LLaMA 3 70b):** Groq runs on custom LPUs (Language Processing Units) rather than traditional GPUs. This enables the 70-billion parameter LLaMA 3 model to process massive resume tokens and return a complex scorecard in less than 2 seconds (often exceeding 800 tokens/second). 
-*   **pdfplumber:** Standard OCR/PDF tools often scramble text when encountering columns or tables. `pdfplumber` was specifically chosen for its spatial-awareness, ensuring that the structural layout and semantic flow of the resume are preserved before being fed into the AI matrix.
-*   **PostgreSQL:** A highly structured relational database used to ensure ACID compliance when persisting user authentication data and serialized historical analysis scorecards.
+### 🛠️ Backend & AI Ecosystem (Python & PostgreSQL)
+*   **Python 3 & FastAPI:** Selected over Django/Flask because FastAPI is built on Starlette and Pydantic. It allows for highly concurrent, asynchronous (`async/await`) non-blocking I/O processing.
+*   **Groq API (LLaMA 3 70b):** Groq runs on custom LPUs (Language Processing Units) rather than traditional GPUs, enabling the 70-billion parameter model to process massive resume tokens in under 2 seconds.
+*   **pdfplumber:** Standard OCR tools often scramble text when encountering columns or tables. `pdfplumber` was specifically chosen for its spatial-awareness, preserving the hierarchical layout before semantic analysis.
+*   **PostgreSQL & Prisma ORM:** PostgreSQL is used to ensure robust ACID compliance when persisting user history. Instead of traditional SQL drivers, the **Prisma ORM** is implemented to provide a strictly-typed, schema-driven interaction layer with the database, ensuring seamless migrations and type-safe queries directly from the application layer.
 
 ---
 
