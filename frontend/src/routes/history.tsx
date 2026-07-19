@@ -191,7 +191,7 @@ function HistoryPage() {
                       <Clock className="h-3.5 w-3.5" /> Session started
                     </div>
                     <div className="font-semibold text-sm">
-                      {new Date(session.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      {new Date(session.createdAt).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                     </div>
                   </div>
                 </div>
