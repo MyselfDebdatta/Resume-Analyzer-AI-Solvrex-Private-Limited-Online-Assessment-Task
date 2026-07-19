@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
-import { Clock, Search, ChevronRight, ChevronDown, Sparkles, Rocket, ArrowLeft, Home, LogOut, Calendar, Activity, FileCheck, Trash2, AlertTriangle, Github } from "lucide-react";
+import { Clock, Search, ChevronRight, ChevronDown, Sparkles, Rocket, ArrowLeft, Home, LogOut, Calendar, Activity, FileCheck, Trash2, AlertTriangle, Github, Loader2 } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { getUserStatsFn, getHistoryFn, deleteAnalysisFn, clearHistoryFn, getAnalysisByIdFn } from "@/lib/server-fns";
 
@@ -58,6 +58,7 @@ function HistoryPage() {
   const [clearAllConfirm, setClearAllConfirm] = useState(false);
   const [confirmText, setConfirmText] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
+  const [openingId, setOpeningId] = useState<string | null>(null);
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -87,7 +88,7 @@ function HistoryPage() {
 
   const handleOpenAnalysis = async (id: string) => {
     try {
-      setIsDeleting(true); // reusing this loading state to disable buttons during fetch
+      setOpeningId(id);
       const analysis = await getAnalysisByIdFn({ data: id });
       
       sessionStorage.setItem("analyzer_role", analysis.role);
@@ -112,7 +113,7 @@ function HistoryPage() {
     } catch (err) {
       console.error(err);
     } finally {
-      setIsDeleting(false);
+      setOpeningId(null);
     }
   };
 
@@ -294,10 +295,19 @@ function HistoryPage() {
                       </button>
                       <button
                         onClick={() => handleOpenAnalysis(it.id)}
-                        disabled={isDeleting}
+                        disabled={isDeleting || openingId !== null}
                         className="inline-flex flex-shrink-0 items-center gap-1 rounded-full border border-brand/40 bg-brand/10 text-brand px-4 py-2 text-xs font-semibold hover:bg-brand hover:text-primary-foreground transition-colors disabled:opacity-50 cursor-pointer"
                       >
-                        Open <ChevronRight className="h-3 w-3" />
+                        {openingId === it.id ? (
+                          <>
+                            <Loader2 className="h-3 w-3 animate-spin" />
+                            Opening...
+                          </>
+                        ) : (
+                          <>
+                            Open <ChevronRight className="h-3 w-3" />
+                          </>
+                        )}
                       </button>
                     </div>
                   </div>
